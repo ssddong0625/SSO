@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06366330a27c5e44e907439364a6307a, type: 3}
   m_Name: MonsterData
   m_EditorClassIdentifier: 
-  atk: 0
-  exp: 0
-  moveSpeed: 0
+  atk: 10
+  exp: 100
+  hp: 10
   monsterPrefab: {fileID: 0}
   dropItem: {fileID: 0}
