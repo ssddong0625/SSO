@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameAssets.Scripts.Weapons;
 
-namespace GameAssets.Scripts.Player
+
+
+namespace GameAssets.Scripts.Players
 {
     [RequireComponent(typeof(CharacterController))]
     public class PlayerMove : MonoBehaviour
@@ -25,6 +28,7 @@ namespace GameAssets.Scripts.Player
         [SerializeField]
         Transform cameraPivot;
 
+        public Weapon weapon;
         float xRotation = 0f;
         float yaw = 0f;
         float verticalVelocity;
@@ -75,6 +79,26 @@ namespace GameAssets.Scripts.Player
             cc.Move(velocity * Time.deltaTime);
             float speed = moveInput.magnitude;
             animator.SetFloat("Speed", speed);
+
+
+
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                moveSpeed = 10f;
+                animator.SetFloat("Speed",2 *speed);
+            }
+            else
+            {
+                moveSpeed = 5f;
+            }
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                weapon.Attack();
+            }
+            else
+            {
+                weapon.attackSpeed = 0f;
+            }
         }
         void Update()
         {

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   atk: 10
   exp: 100
-  hp: 10
-  monsterPrefab: {fileID: 0}
+  hp: 300
+  monsterPrefab: {fileID: 1870159090983899011, guid: 512d260676a468446a5e08973b0cdec1,
+    type: 3}
   dropItem: {fileID: 0}
