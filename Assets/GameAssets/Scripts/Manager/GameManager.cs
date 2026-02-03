@@ -24,12 +24,11 @@ namespace GameAssets.Scripts.Manager
                 Destroy(gameObject);
                 DontDestroyOnLoad(gameObject);
             }
-
             exp = 0;
             level = 1;
             maxExp = 100;
-
         }
+        
         public int Exp
         {
             get { return exp; }
@@ -40,8 +39,6 @@ namespace GameAssets.Scripts.Manager
                 if (exp >= maxExp)
                 {
                     LevelUp();
-
-
                 }
             }
         }

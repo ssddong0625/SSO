@@ -195,10 +195,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8897958093130433459}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 96ccab11a2e88aa429777491c084a3fd,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3104298648718540931}
   m_SourcePrefab: {fileID: 100100000, guid: 96ccab11a2e88aa429777491c084a3fd, type: 3}
 --- !u!1 &424157568786628893 stripped
 GameObject:
@@ -218,29 +214,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 079bdf8c0139a3d4181ae328aab99c4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  atk: 10
---- !u!64 &3104298648718540931
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 424157568786628893}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
+  data: {fileID: 0}
+  animator: {fileID: 0}
+  hitLayermask:
     serializedVersion: 2
     m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 5461320835613783329, guid: 96ccab11a2e88aa429777491c084a3fd, type: 3}
+  attackSpeed: 0
+  hitCollider: {fileID: 0}
 --- !u!4 &1056438961362328487 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 96ccab11a2e88aa429777491c084a3fd,
@@ -409,6 +389,7 @@ MonoBehaviour:
   maxX: 60
   player: {fileID: 5274374216506197355}
   cameraPivot: {fileID: 2437717484557645390}
+  weapon: {fileID: 0}
 --- !u!114 &1553629625126187699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,9 +402,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f93fa175d77a1174eb5f80f5eacf7811, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data: {fileID: 0}
   atk: 0
   prefab: {fileID: 919132149155446097, guid: 96ccab11a2e88aa429777491c084a3fd, type: 3}
-  prafbTransform: {fileID: 3481549941543414810}
+  weaponHand: {fileID: 0}
+  weapon: {fileID: 0}
 --- !u!4 &5274374216506197355 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a46be3dba15e64f45abf31530efb6b6f,

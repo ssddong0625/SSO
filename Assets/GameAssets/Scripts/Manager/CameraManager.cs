@@ -13,7 +13,7 @@ namespace GameAssets.Scripts.Manager
         public CinemachineVirtualCamera onePerson;
 
         public int active = 20;
-        
+        //public float zoomSpeed = 0.5f;
         public int inactive = 10;
 
         public void SwapCamera()
@@ -33,6 +33,7 @@ namespace GameAssets.Scripts.Manager
         }
         public void Start()
         {
+           // TryGetComponent(out thirdPerson);
             ThirdPerson();
         }
         public void ThirdPerson()
@@ -45,6 +46,14 @@ namespace GameAssets.Scripts.Manager
             onePerson.Priority = active;
             thirdPerson.Priority = inactive;
         }
+/*
+        public void ZoomIn()
+        {
+            
+            float y = Input.GetAxis("Mouse ScrollWheel");
+            
+        }
+*/
 
         public void Update()
         {
