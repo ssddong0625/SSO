@@ -5,12 +5,13 @@ using UnityEngine.UIElements;
 
 namespace GameAssets.Scripts.Data
 {
-    [CreateAssetMenu(menuName = "Monster/MonsterData", order = 1)]
+    [CreateAssetMenu(menuName = "MonsterData/MonsterData", order = 1)]
     public class MonsterData : ScriptableObject
     {
         public int atk;
         public int exp;
         public int hp;
+        public int maxHp;
        // public float attackSpeed;
         public GameObject monsterPrefab;
         public GameObject dropItem;

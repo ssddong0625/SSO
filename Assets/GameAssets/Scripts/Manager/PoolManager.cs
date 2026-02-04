@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameAssets.Scripts.Monsters;
 using GameAssets.Scripts.Players;
+using GameAssets.Scripts.Data;
+using Unity.VisualScripting;
 
 namespace GameAssets.Scripts.Manager
 {
@@ -10,14 +12,15 @@ namespace GameAssets.Scripts.Manager
     {
         public static PoolManager instance = null;
         Queue<GameObject> pool;
-        public GameObject targetObj;
-        public int poolCount;
-        public Vector3 monsterSpawn;
-        public Vector3 monsterSpawn2;
-        [SerializeField]
+        GameObject targetObj;
+        private int poolCount;
+        private int spawnIndex;
+        Vector3[] monsterSpawn;
         Monster monster;
         [SerializeField]
         Transform player;
+        int monsterSpawnTime;
+
         private void Awake()
         {
             if(instance == null)
@@ -28,48 +31,72 @@ namespace GameAssets.Scripts.Manager
             {
                 Destroy(gameObject);
             }
+            pool = new Queue<GameObject>();
+        }
+        public void InitData(MonsterSpawnData data)
+        {
+            poolCount = data.poolCount;
+            monsterSpawn = data.monsterSpawn;
+            monster = data.monster;
+            targetObj = data.targetObj;
+            monsterSpawnTime= data.monsterSpawnTime;
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            pool = new Queue<GameObject>();
-            poolCount = 2;
-            for(int i=0;i<poolCount; i++)
-            {
-                GameObject newObj = Instantiate(targetObj);
-                newObj.SetActive(false);
-                pool.Enqueue(newObj);
-                StartCoroutine(MonsterPoolingCO());
-            }
-         
+            BuildPool();
+            StartCoroutine(MonsterPoolingCO());
         }
-        
+
+        public void BuildPool()
+        {
+            for(int i=0;i< poolCount; i++)
+            {
+                GameObject newObj=Instantiate(targetObj);
+                newObj.SetActive(false);
+                Monster monster = newObj.GetComponent<Monster>();
+                Vector3 spawnPos = monsterSpawn[i % monsterSpawn.Length];
+                monster.SpawnPos(spawnPos);
+                pool.Enqueue(newObj);
+            }
+        }
         public void UsePool()
         {
-            GameObject useObj = pool.Dequeue();
-            useObj.transform.position=monsterSpawn;
-            useObj.SetActive(true);
-            Monster m = useObj.GetComponent<Monster>();
-            if (m != null)
+          
+            for(int s = 0; s < poolCount; s++)
             {
-                m.SetTarget(player);
+                if (pool == null || pool.Count == 0)
+                {
+                    Debug.Log("인덱스 초과");
+                    return;
+                }
+                GameObject useObj = pool.Dequeue();
+                Monster monster = useObj.GetComponent<Monster>();
+                monster.Spawn();
+                monster.SetTarget(player);
+               
             }
-
+           
         }
-
         IEnumerator MonsterPoolingCO()
         {
-            yield return new WaitForSeconds(3f);
-            UsePool();
-            
+            while(pool!=null && pool.Count>0)
+            {
+                yield return new WaitForSeconds(monsterSpawnTime);
+                UsePool();
+            }
+            Debug.Log("몬스터 풀 소환");
         }
         public void ReturnPool(GameObject returnObj)
         {
             returnObj.SetActive(false);
             pool.Enqueue(returnObj);
+            if(pool != null && pool.Count > 0)
+            {
+                StartCoroutine(MonsterPoolingCO());
+            }
         }
-
         // Update is called once per frame
         void Update()
         {

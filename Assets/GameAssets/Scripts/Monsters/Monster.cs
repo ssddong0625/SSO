@@ -19,17 +19,20 @@ namespace GameAssets.Scripts.Monsters
         protected int hp;
         [SerializeField]
         protected int exp;
+        int maxHp;
         public event Action<Monster> ondie;
         public Animator animator;
-        
-        
+
         NavMeshAgent agent;
         public Transform target;
-        public Vector3 returnMonster;
+       // public Vector3 returnMonster;
         public int attackRange;
         public float attackCool;
         public float detectiveRange;
+        public float exitRange;
         float nextAttack;
+
+        public Vector3 spawnPos;
 
         public int Atk
         {
@@ -48,7 +51,8 @@ namespace GameAssets.Scripts.Monsters
                 if (hp <= 0)
                 {
                     AddExp();
-                    PoolManager.instance.ReturnPool(gameObject);
+                    hp = maxHp;
+                    StartCoroutine(DieCo());
                 }
             }
         }
@@ -72,7 +76,7 @@ namespace GameAssets.Scripts.Monsters
             if (target == null)
             {
                 StopMoving();
-                agent.SetDestination(returnMonster);
+                agent.SetDestination(spawnPos);
                 return;
             }
             float distance = Vector3.Distance(transform.position,target.position);
@@ -93,7 +97,7 @@ namespace GameAssets.Scripts.Monsters
             else
             {
                 StopMoving();
-                agent.SetDestination(returnMonster);
+                agent.SetDestination(spawnPos);
             }
         }
         private void OnDrawGizmosSelected()
@@ -125,9 +129,29 @@ namespace GameAssets.Scripts.Monsters
             atk = data.atk;
             exp = data.exp;
             hp = data.hp;
+            maxHp=data.maxHp;
          //   attackCool = data.attackCool;
            // attackRange = data.attackRange;
         }
+        public void SpawnPos(Vector3 pos)
+        {
+            spawnPos = pos;
+        }
+
+        
+        public void Spawn()
+        {
+            transform.position = spawnPos;
+            gameObject.SetActive(true);
+        }
+
+        IEnumerator DieCo()
+        {
+            animator.SetTrigger("Die");
+            yield return new WaitForSeconds(3f);
+            PoolManager.instance.ReturnPool(gameObject);
+        }
+
         public void AddExp()
         {
             GameManager.instance.Exp += exp;
