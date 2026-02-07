@@ -17,20 +17,44 @@ namespace GameAssets.Scripts.Weapons
         LayerMask hitLayermask;
         public float attackSpeed;
         public BoxCollider hitCollider;
+        private HashSet<IHitAble> hits;
+
+
         private void Awake()
         {
             InitData();
             atkSpeed = 1.2f;
             attackSpeed = 2f;
             hitCollider=GetComponent<BoxCollider>();
+            hits = new HashSet<IHitAble>();
+        }
+        public void Start()
+        {
             hitCollider.isTrigger = false;
+            
         }
         public void InitData()
         {
             atk = data.atk;
             //atkSpeed = data.atkSpeed;
         }
+        public int Atk
+        {
+            get { return atk; }
+            set
+            {
+                atk = value;
+            }
+        }
 
+        public void HateAttack()
+        {
+            if (hits == null)
+            {
+                Debug.Log("HasSet 널");
+            }
+            hits.Clear();
+        }
         public void Attack()
         {
             /*
@@ -50,15 +74,18 @@ namespace GameAssets.Scripts.Weapons
       
         public void OnTriggerEnter(Collider other)
         {
-            IHitAble hit = other.GetComponent<IHitAble>();
-            if (((1 << other.gameObject.layer) & hitLayermask.value) != 0)
-            {
+            if (((1 << other.gameObject.layer) & hitLayermask.value) == 0) { return; }
+                IHitAble hit = other.GetComponent<IHitAble>();
+                Debug.Log(" 되나 ?");
+               if (!hits.Add(hit)) { Debug.Log("플레이어 리턴하빈다"); return; }
                 hit?.Hit(atk);
-            }
-            else
-            {
-                return;
-            }
+            /*
+            IHitAble hit = other.GetComponent<IHitAble>();
+            if (!hits.Add(hit)) { Debug.Log("리턴하빈다");  return; }
+            hitCollider.isTrigger = false;
+            
+            hit?.Hit(atk);
+            */
         }
     }
 

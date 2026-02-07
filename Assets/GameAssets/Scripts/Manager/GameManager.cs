@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,10 +10,12 @@ namespace GameAssets.Scripts.Manager
     {
         public static GameManager instance = null;
         [SerializeField]
-        int exp;
+        float exp;
         [SerializeField]
         int level;
-        int maxExp;
+        float levelUpExp;
+        float expStep;
+        public event Action onExpChanged;
         private void Awake()
         {
             if (instance == null)
@@ -26,39 +29,34 @@ namespace GameAssets.Scripts.Manager
             }
             exp = 0;
             level = 1;
-            maxExp = 100;
+            levelUpExp = 100;
+            expStep = 1.15f;
         }
-        
-        public int Exp
+        public float Exp
         {
             get { return exp; }
             set
             {
                 exp = value;
-                Debug.Log($"남은 경험치는 {exp} 입니다");
-                if (exp >= maxExp)
-                {
-                    LevelUp();
-                }
             }
         }
-        public void LevelUp()
+
+        public int NeedExp()
         {
-            level++;
-            maxExp = maxExp * 2;
-            Debug.Log(maxExp);
+            return Mathf.CeilToInt(levelUpExp * Mathf.Pow(expStep, level - 1));
+        }
+        public void AddExp(int amount)
+        {
+            exp += amount;
+            while (exp >= NeedExp())
+            {
+                exp -= NeedExp();
+                level++;
+
+            }
+
+            onExpChanged?.Invoke();
         }
 
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
     }
 }

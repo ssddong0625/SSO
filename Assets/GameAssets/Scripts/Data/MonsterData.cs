@@ -10,10 +10,8 @@ namespace GameAssets.Scripts.Data
     {
         public int atk;
         public int exp;
-        public int hp;
-        public int maxHp;
-       // public float attackSpeed;
-        public GameObject monsterPrefab;
+        public float hp;
+        public float maxHp;
         public GameObject dropItem;
     }
 }

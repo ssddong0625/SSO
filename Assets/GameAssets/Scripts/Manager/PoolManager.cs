@@ -1,110 +1,121 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using GameAssets.Scripts.Monsters;
-using GameAssets.Scripts.Players;
-using GameAssets.Scripts.Data;
+using System.Net;
 using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.Pool;
 
-namespace GameAssets.Scripts.Manager
+public class PoolManager : MonoBehaviour
 {
-    public class PoolManager : MonoBehaviour
+    public static PoolManager instance = null;
+    Dictionary<PoolKey, Queue<GameObject>> pool;
+    [SerializeField]
+    Transform poolRoot;
+    private void Awake()
     {
-        public static PoolManager instance = null;
-        Queue<GameObject> pool;
-        GameObject targetObj;
-        private int poolCount;
-        private int spawnIndex;
-        Vector3[] monsterSpawn;
-        Monster monster;
-        [SerializeField]
-        Transform player;
-        int monsterSpawnTime;
-
-        private void Awake()
+        if (instance == null)
         {
-            if(instance == null)
-            {
-                instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-            pool = new Queue<GameObject>();
+            instance = this;
         }
-        public void InitData(MonsterSpawnData data)
+        else
         {
-            poolCount = data.poolCount;
-            monsterSpawn = data.monsterSpawn;
-            monster = data.monster;
-            targetObj = data.targetObj;
-            monsterSpawnTime= data.monsterSpawnTime;
+            Destroy(gameObject);
         }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            BuildPool();
-            StartCoroutine(MonsterPoolingCO());
-        }
-
-        public void BuildPool()
-        {
-            for(int i=0;i< poolCount; i++)
-            {
-                GameObject newObj=Instantiate(targetObj);
-                newObj.SetActive(false);
-                Monster monster = newObj.GetComponent<Monster>();
-                Vector3 spawnPos = monsterSpawn[i % monsterSpawn.Length];
-                monster.SpawnPos(spawnPos);
-                pool.Enqueue(newObj);
-            }
-        }
-        public void UsePool()
-        {
-          
-            for(int s = 0; s < poolCount; s++)
-            {
-                if (pool == null || pool.Count == 0)
-                {
-                    Debug.Log("인덱스 초과");
-                    return;
-                }
-                GameObject useObj = pool.Dequeue();
-                Monster monster = useObj.GetComponent<Monster>();
-                monster.Spawn();
-                monster.SetTarget(player);
-               
-            }
-           
-        }
-        IEnumerator MonsterPoolingCO()
-        {
-            while(pool!=null && pool.Count>0)
-            {
-                yield return new WaitForSeconds(monsterSpawnTime);
-                UsePool();
-            }
-            Debug.Log("몬스터 풀 소환");
-        }
-        public void ReturnPool(GameObject returnObj)
-        {
-            returnObj.SetActive(false);
-            pool.Enqueue(returnObj);
-            if(pool != null && pool.Count > 0)
-            {
-                StartCoroutine(MonsterPoolingCO());
-            }
-        }
-        // Update is called once per frame
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                UsePool();
-            }
-        }
+        pool = new Dictionary<PoolKey, Queue<GameObject>>();
     }
-}
 
+    public void BuildPool(PoolKey key)
+    {
+        if (key == null)
+        {
+            Debug.Log("key 없음");
+            return;
+        }
+        if (key.prewarmCount <= 0)
+        {
+            Debug.Log("key.prewarmCount 없음");
+            return;
+        }
+        if (key.prefab == null)
+        {
+            Debug.Log("keyPrefab 없음");
+            return;
+        }
+        //if(key.prewarmCount)
+
+        Queue<GameObject> q = new Queue<GameObject>(key.prewarmCount);
+
+        for (int i = 0; i < key.prewarmCount; i++)
+        {
+            GameObject obj = Instantiate(key.prefab, poolRoot);
+            obj.SetActive(false);
+
+            PooledObject poolObj = obj.GetComponent<PooledObject>();
+            if (poolObj == null)
+            {
+                poolObj = obj.AddComponent<PooledObject>();
+            }
+
+            poolObj.key = key;
+
+            IPoolable poolable = obj.GetComponent<IPoolable>();
+            if (poolable != null)
+            {
+                poolable.OnDeSpawned();
+
+            }
+            q.Enqueue(obj);
+        }
+
+        pool.Add(key, q);
+
+    }
+
+    public GameObject UsePool(PoolKey Key)
+    {
+        Queue<GameObject> q;
+        if (!pool.TryGetValue(Key, out q))
+        {
+            return null;
+        }
+        if (q.Count <= 0)
+        {
+            return null;
+        }
+        GameObject obj = q.Dequeue();
+
+        return obj;
+    }
+
+    public void ActivePool(GameObject obj)
+    {
+        if (obj == null) return;
+        IPoolable able = obj.GetComponent<IPoolable>();
+        if (able != null)
+        {
+            able.OnSpawned();
+        }
+
+        obj.SetActive(true);
+    }
+
+    public void ReturnPool(GameObject obj)
+    {
+        PooledObject poolobj = obj.GetComponent<PooledObject>();
+        Queue<GameObject> q;
+        if (!pool.TryGetValue(poolobj.key, out q))
+        {
+            return;
+        }
+
+        IPoolable poolable = obj.GetComponent<IPoolable>();
+        poolable.OnDeSpawned();
+
+
+        obj.SetActive(false);
+
+        obj.transform.SetParent(poolRoot);
+        q.Enqueue(obj);
+    }
+
+}

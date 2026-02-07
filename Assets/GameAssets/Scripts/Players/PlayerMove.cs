@@ -95,10 +95,7 @@ namespace GameAssets.Scripts.Players
             {
                 weapon.Attack();
             }
-            else
-            {
-                weapon.attackSpeed = 0f;
-            }
+          
         }
         void Update()
         {

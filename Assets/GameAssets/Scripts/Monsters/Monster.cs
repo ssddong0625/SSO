@@ -6,23 +6,25 @@ using UnityEngine;
 using GameAssets.Scripts.Data;
 using GameAssets.Scripts.Manager;
 using UnityEngine.AI;
+using GameAssets.Scripts.Weapons;
+using UnityEngine.UI;
 
 
 namespace GameAssets.Scripts.Monsters
 {
-    public class Monster : MonoBehaviour, IHitAble
+    public class Monster : MonoBehaviour, IPoolable
     {
         public MonsterData data;
         [SerializeField]
-        protected int atk;
-        [SerializeField]
-        protected int hp;
-        [SerializeField]
-        protected int exp;
-        int maxHp;
-        public event Action<Monster> ondie;
+       int atk;
+       float hp;
+       int exp;
+        float maxHp;
+        public event Action ondie;
+        public event Action<Spawner> onspawner;
         public Animator animator;
-
+        [SerializeField]
+        BoxCollider boxCol;
         NavMeshAgent agent;
         public Transform target;
        // public Vector3 returnMonster;
@@ -31,8 +33,13 @@ namespace GameAssets.Scripts.Monsters
         public float detectiveRange;
         public float exitRange;
         float nextAttack;
+        HashSet<IHitAble> hits;
 
         public Vector3 spawnPos;
+
+        public Image img;
+
+        public Spawner spanwer;
 
         public int Atk
         {
@@ -42,7 +49,7 @@ namespace GameAssets.Scripts.Monsters
                 atk = value;
             }
         }
-        public int Hp
+        public float Hp
         {
             get { return hp; }
             set
@@ -50,33 +57,45 @@ namespace GameAssets.Scripts.Monsters
                 hp = value;
                 if (hp <= 0)
                 {
-                    AddExp();
-                    hp = maxHp;
+                    hp = 0;
+                    boxCol.enabled = false;
                     StartCoroutine(DieCo());
                 }
             }
         }
+        public float MaxHp
+        {
+            get { return maxHp; }
+            set
+            {
+                maxHp = value;
+            }
+        }
         public void Awake()
         {
-            InitData();
+          //  InitData();
             TryGetComponent(out agent);
-            agent.stoppingDistance = attackRange;
+            hits=new HashSet<IHitAble>();
+           // TryGetComponent(out boxCol);
+        }
+        public void Start()
+        {
+            if (agent != null)
+            {
+               agent.stoppingDistance = attackRange;
+            }
         }
         public void Update()
         {
             UpdateCombat();
-        }
-        public IEnumerator MonsterPool()
-        {
-            yield return new WaitForSeconds(3f);
-            PoolManager.instance.UsePool();
+            
+            img.fillAmount = hp / maxHp;
         }
         public void UpdateCombat()
         {
             if (target == null)
             {
                 StopMoving();
-                agent.SetDestination(spawnPos);
                 return;
             }
             float distance = Vector3.Distance(transform.position,target.position);
@@ -113,65 +132,91 @@ namespace GameAssets.Scripts.Monsters
             agent.SetDestination(target.position);
         }
 
+        
         public void StopMoving()
         {
             agent.isStopped = true;
             agent.ResetPath();
         }
 
+        public void GoHome(Vector3 pos)
+        {
+            spawnPos = pos;
+        }
         public void SetTarget(Transform target)
         {
             this.target = target;
         }
-
-        public void InitData()
-        {
-            atk = data.atk;
-            exp = data.exp;
-            hp = data.hp;
-            maxHp=data.maxHp;
-         //   attackCool = data.attackCool;
-           // attackRange = data.attackRange;
-        }
-        public void SpawnPos(Vector3 pos)
-        {
-            spawnPos = pos;
-        }
-
-        
-        public void Spawn()
-        {
-            transform.position = spawnPos;
-            gameObject.SetActive(true);
-        }
-
         IEnumerator DieCo()
         {
+            target = null;
             animator.SetTrigger("Die");
+            GameManager.instance.AddExp(exp);
             yield return new WaitForSeconds(3f);
             PoolManager.instance.ReturnPool(gameObject);
+            ondie?.Invoke();
         }
+     
 
         public void AddExp()
         {
-            GameManager.instance.Exp += exp;
+           // GameManager.instance.Exp += exp;
         }
+        /*
         public void Hit(int atk)
         {
             Hp -= atk;
             animator.SetTrigger("TakeDamage");
             Debug.Log($"맞았습니다 남은 Hp는{Hp}");
         }
+        */
 
         private void OnTriggerEnter(Collider other)
         {
+            Debug.Log("맞혔습니다");
             IHitAble hit = other.GetComponent<IHitAble>();
-            hit?.Hit(atk);
+            if (!hits.Add(hit))
+            {
+                Debug.Log(" 몬스터 리턴 합니다");
+                return;
+            }
+            hit?.Hit(atk) ;
+            
         }
 
         public void Attack()
         {
+            if(target == null)
+            {
+                return;
+            }
+            hits.Clear();
+            boxCol.isTrigger = true;
             animator.SetTrigger("Hit");
+            StartCoroutine(AttackTriggerCo());
+        }
+        IEnumerator AttackTriggerCo()
+        {
+            yield return new WaitForSeconds(0.2f);
+            boxCol.isTrigger = false;
+            
+        }
+        public void OnSpawned()
+        {
+            hp = data.hp;
+            maxHp = data.maxHp;
+            exp = data.exp;
+            atk = data.atk;
+            boxCol.enabled = true;
+        }
+
+        public void OnDeSpawned()
+        {
+            hp = data.hp;
+            maxHp = data.maxHp;
+            exp = data.exp;
+            atk = data.atk;
+            hp = maxHp;
         }
     }
 

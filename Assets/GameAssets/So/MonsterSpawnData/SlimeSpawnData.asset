@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4689e5c9d072891499018198915ad2ec, type: 3}
+  m_Name: SlimeSpawnData
+  m_EditorClassIdentifier: 
+  key: {fileID: 11400000, guid: f8b354e0bca53a94a91371837716d468, type: 2}
+  spawnPoint:
+  - {x: 10, y: 0, z: 50}
+  - {x: 30, y: 0, z: 70}
+  - {x: 50, y: 0, z: 90}
+  - {x: 70, y: 0, z: 30}
+  - {x: 90, y: 0, z: 10}
+  spawnTime: 5
