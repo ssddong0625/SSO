@@ -1,15 +1,19 @@
 using GameAssets.Scripts.Manager;
 using GameAssets.Scripts.Monsters;
+using GameAssets.Scripts.Players;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
 {
     public static UiManager instance = null;
     public Image expImg;
+    public Image runGaugeImg;
+    public PlayerMove player;
     private void Awake()
     {
         if (instance == null)
@@ -25,6 +29,7 @@ public class UiManager : MonoBehaviour
     public void Start()
     {
         GameManager.instance.onExpChanged += RefreshExpUI;
+        player.onRun += CharacterRun;
     }
     /*
     private void OnEnable()
@@ -45,6 +50,12 @@ public class UiManager : MonoBehaviour
     }
     */
 
+    private void CharacterRun()
+    {
+        runGaugeImg.fillAmount = player.Gauge / player.MaxGauge;
+        player.onRun -= CharacterRun;
+        player.onRun += CharacterRun;
+    }
     private void RefreshExpUI()
     {
         if (expImg == null) return;

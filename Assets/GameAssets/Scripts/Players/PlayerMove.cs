@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GameAssets.Scripts.Weapons;
+using System;
 
 
 
@@ -33,6 +34,20 @@ namespace GameAssets.Scripts.Players
         float yaw = 0f;
         float verticalVelocity;
         Vector3 moveInput;
+
+        float useGauge = 0.1f;
+        float gauge = 100f;
+        float maxGauge= 100f;
+
+        public event Action onRun;
+
+        public float Gauge
+        {
+            get { return gauge; }
+            set {  gauge = value; }
+        }
+        public float MaxGauge { get { return maxGauge; } set { maxGauge = value; } }
+
 
         void Awake()
         {
@@ -80,17 +95,23 @@ namespace GameAssets.Scripts.Players
             float speed = moveInput.magnitude;
             animator.SetFloat("Speed", speed);
 
-
-
             if (Input.GetKey(KeyCode.LeftShift))
             {
+                if (gauge <= 0) { gauge = 0;  return; }
+                gauge -= useGauge;
                 moveSpeed = 10f;
                 animator.SetFloat("Speed",2 *speed);
+                onRun?.Invoke();
             }
             else
             {
+                if (gauge >= 100) { gauge = 100; return; }
                 moveSpeed = 5f;
+                gauge += useGauge;
+                onRun?.Invoke();
             }
+
+
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 weapon.Attack();
