@@ -44,9 +44,8 @@ namespace GameAssets.Scripts.Players
         public float Gauge
         {
             get { return gauge; }
-            set {  gauge = value; }
         }
-        public float MaxGauge { get { return maxGauge; } set { maxGauge = value; } }
+        public float MaxGauge { get { return maxGauge; } }
 
 
         void Awake()
@@ -61,14 +60,23 @@ namespace GameAssets.Scripts.Players
         //잠깐 만들어놓음 나중에 지울것.
         public void UnLockCursor()
         {
+            
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
+
+            if (Input.GetKeyDown(KeyCode.F12))
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
         public void Move()
         {
+            if (Cursor.visible) { return; } 
+            
             float x = Input.GetAxisRaw("Horizontal");
             float z = Input.GetAxisRaw("Vertical");
             moveInput = new Vector3(x, 0f, z);
@@ -95,6 +103,10 @@ namespace GameAssets.Scripts.Players
             float speed = moveInput.magnitude;
             animator.SetFloat("Speed", speed);
 
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                weapon.Attack();
+            }
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 if (gauge <= 0) { gauge = 0;  return; }
@@ -112,11 +124,14 @@ namespace GameAssets.Scripts.Players
             }
 
 
-            if (Input.GetKeyDown(KeyCode.Mouse0))
-            {
-                weapon.Attack();
-            }
           
+        }
+
+
+        IEnumerator DisapearCo()
+        {
+            yield return new WaitForSeconds(3f);
+            
         }
         void Update()
         {

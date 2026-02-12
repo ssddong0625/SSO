@@ -10,8 +10,9 @@ namespace GameAssets.Scripts.Weapons
     {
         public WeaponData data;
         int atk;
-        float atkSpeed;
-        float nextAttack;
+        //float atkSpeed;
+        //float nextAttack;
+        
         public Animator animator;
         [SerializeField]
         LayerMask hitLayermask;
@@ -23,20 +24,19 @@ namespace GameAssets.Scripts.Weapons
         private void Awake()
         {
             InitData();
-            atkSpeed = 1.2f;
-            attackSpeed = 2f;
             hitCollider=GetComponent<BoxCollider>();
             hits = new HashSet<IHitAble>();
         }
         public void Start()
         {
+          //  atkSpeed = 1.2f;
+            attackSpeed = 2f;
             hitCollider.isTrigger = false;
             
         }
         public void InitData()
         {
             atk = data.atk;
-            //atkSpeed = data.atkSpeed;
         }
         public int Atk
         {
@@ -57,18 +57,8 @@ namespace GameAssets.Scripts.Weapons
         }
         public void Attack()
         {
-            /*
-            if(Time.time>=nextAttack)
-            {
-                nextAttack = Time.time + atkSpeed;
-                animator.SetTrigger("Attack");
-                
-            }
-            return;
-            */
-            attackSpeed = 2f;
-            animator.SetFloat("AttackSpeed", attackSpeed);
             animator.SetTrigger("Attack");
+            animator.SetFloat("AttackSpeed", attackSpeed);
 
         }
       

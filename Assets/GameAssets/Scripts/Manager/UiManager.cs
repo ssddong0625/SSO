@@ -4,6 +4,7 @@ using GameAssets.Scripts.Players;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
@@ -13,7 +14,12 @@ public class UiManager : MonoBehaviour
     public static UiManager instance = null;
     public Image expImg;
     public Image runGaugeImg;
-    public PlayerMove player;
+    public PlayerMove playerGauge;
+    public Player player;
+    public Monster monster;
+    [SerializeField]
+    public GameObject runGaugePanel;
+
     private void Awake()
     {
         if (instance == null)
@@ -28,8 +34,12 @@ public class UiManager : MonoBehaviour
 
     public void Start()
     {
+        if (runGaugePanel != null)
+        {
+            runGaugePanel.SetActive(false);
+        }
         GameManager.instance.onExpChanged += RefreshExpUI;
-        player.onRun += CharacterRun;
+        playerGauge.onRun += CharacterRun;
     }
     /*
     private void OnEnable()
@@ -50,11 +60,32 @@ public class UiManager : MonoBehaviour
     }
     */
 
+    private void SetActive()
+    {
+        if (playerGauge.Gauge < playerGauge.MaxGauge)
+        {
+            runGaugePanel.gameObject.SetActive(true);
+        }
+        else
+        {
+            runGaugePanel.gameObject.SetActive(false);
+        }
+    }
+
+    public void Update()
+    {
+        SetActive();
+    }
+    private void RefreshHp()
+    {
+    }
+
     private void CharacterRun()
     {
-        runGaugeImg.fillAmount = player.Gauge / player.MaxGauge;
-        player.onRun -= CharacterRun;
-        player.onRun += CharacterRun;
+        runGaugeImg.fillAmount = playerGauge.Gauge / playerGauge.MaxGauge;
+        playerGauge.onRun -= CharacterRun;
+        playerGauge.onRun += CharacterRun;
+        
     }
     private void RefreshExpUI()
     {

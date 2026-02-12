@@ -21,7 +21,8 @@ namespace GameAssets.Scripts.Monsters
        int exp;
         float maxHp;
         public event Action ondie;
-        public event Action<Spawner> onspawner;
+        //public event Action<GameObject> onReturn;
+        //public event Action<Spawner> onspawner;
         public Animator animator;
         [SerializeField]
         BoxCollider boxCol;
@@ -37,10 +38,10 @@ namespace GameAssets.Scripts.Monsters
 
         public Vector3 spawnPos;
 
+       // public GameObject panel;
         public Image img;
 
         public Spawner spanwer;
-
         public int Atk
         {
             get { return atk; }
@@ -55,6 +56,7 @@ namespace GameAssets.Scripts.Monsters
             set
             {
                 hp = value;
+                img.fillAmount = hp / maxHp;
                 if (hp <= 0)
                 {
                     hp = 0;
@@ -71,12 +73,16 @@ namespace GameAssets.Scripts.Monsters
                 maxHp = value;
             }
         }
+
+       
         public void Awake()
         {
+           // panel.gameObject.SetActive(false);
           //  InitData();
             TryGetComponent(out agent);
             hits=new HashSet<IHitAble>();
-           // TryGetComponent(out boxCol);
+            // TryGetComponent(out boxCol);
+            img.gameObject.SetActive(true);
         }
         public void Start()
         {
@@ -87,9 +93,8 @@ namespace GameAssets.Scripts.Monsters
         }
         public void Update()
         {
-            UpdateCombat();
-            
             img.fillAmount = hp / maxHp;
+            UpdateCombat();
         }
         public void UpdateCombat()
         {
@@ -155,6 +160,7 @@ namespace GameAssets.Scripts.Monsters
             yield return new WaitForSeconds(3f);
             PoolManager.instance.ReturnPool(gameObject);
             ondie?.Invoke();
+            //onReturn?.Invoke(gameObject);
         }
      
 
@@ -208,6 +214,7 @@ namespace GameAssets.Scripts.Monsters
             exp = data.exp;
             atk = data.atk;
             boxCol.enabled = true;
+            img.gameObject.SetActive(true);
         }
 
         public void OnDeSpawned()
@@ -216,7 +223,7 @@ namespace GameAssets.Scripts.Monsters
             maxHp = data.maxHp;
             exp = data.exp;
             atk = data.atk;
-            hp = maxHp;
+            //  panel.gameObject.SetActive(false);
         }
     }
 

@@ -9,8 +9,10 @@ public class PoolManager : MonoBehaviour
 {
     public static PoolManager instance = null;
     Dictionary<PoolKey, Queue<GameObject>> pool;
+    /*
     [SerializeField]
     Transform poolRoot;
+    */
     private void Awake()
     {
         if (instance == null)
@@ -24,7 +26,7 @@ public class PoolManager : MonoBehaviour
         pool = new Dictionary<PoolKey, Queue<GameObject>>();
     }
 
-    public void BuildPool(PoolKey key)
+    public void BuildPool(PoolKey key,Transform transform)
     {
         if (key == null)
         {
@@ -47,7 +49,7 @@ public class PoolManager : MonoBehaviour
 
         for (int i = 0; i < key.prewarmCount; i++)
         {
-            GameObject obj = Instantiate(key.prefab, poolRoot);
+            GameObject obj = Instantiate(key.prefab, transform);
             obj.SetActive(false);
 
             PooledObject poolObj = obj.GetComponent<PooledObject>();
@@ -109,12 +111,16 @@ public class PoolManager : MonoBehaviour
         }
 
         IPoolable poolable = obj.GetComponent<IPoolable>();
-        poolable.OnDeSpawned();
+        if (poolable != null)
+        {
+          poolable.OnDeSpawned();
+
+        }
 
 
-        obj.SetActive(false);
+       obj.SetActive(false);
 
-        obj.transform.SetParent(poolRoot);
+      // obj.transform.SetParent(transform);
         q.Enqueue(obj);
     }
 

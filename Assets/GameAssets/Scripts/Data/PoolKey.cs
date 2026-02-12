@@ -9,4 +9,6 @@ public class PoolKey : ScriptableObject
     public GameObject prefab;
     [Header("Ç®¸µ °¹¼ö")]
     public int prewarmCount;
+
+       
 }

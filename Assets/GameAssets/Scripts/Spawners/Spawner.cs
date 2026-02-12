@@ -1,5 +1,6 @@
 using GameAssets.Scripts.Data;
 using GameAssets.Scripts.Monsters;
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
@@ -13,7 +14,7 @@ public class Spawner : MonoBehaviour
     Vector3[] spawnPoint;
     float spawnTime;
     private int spawnIndex;
-    bool isPaused = false;
+   // bool isPaused = false;
     Transform poolRoot;
     [SerializeField]
     SpawnData data;
@@ -33,8 +34,9 @@ public class Spawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PoolManager.instance.BuildPool(key);
-        StartCoroutine(SpawnCo());
+        PoolManager.instance.BuildPool(key,transform);
+        //StartCoroutine(SpawnCo());
+        fireCo = StartCoroutine(SpawnCo());
     }
 
     public Vector3 GetSpawnPos(GameObject obj)
@@ -58,6 +60,14 @@ public class Spawner : MonoBehaviour
     }
     public IEnumerator SpawnCo()
     {
+            yield return new WaitForSeconds(spawnTime);
+            Spawn();
+            fireCo = null;
+         //   StopCoroutine(fireCo);
+        /*while (true)
+        {
+        }
+        
         while (true)
         {
             while (isPaused)
@@ -69,13 +79,27 @@ public class Spawner : MonoBehaviour
             isPaused = true;
 
         }
+        */
     }
     public void ReSpawn()
     {
-        isPaused = false;
+        if (fireCo != null)
+        {
+            return;
+        }
+          fireCo= StartCoroutine(SpawnCo());
+
+        //isPaused = false;
     }
 
+    public Coroutine fireCo;
 
+    /*
+    public void Return(GameObject obj)
+    {
+        PoolManager.instance.ReturnPool(obj);
+    }
+    */
     public void Spawn()
     {
        
@@ -84,7 +108,7 @@ public class Spawner : MonoBehaviour
             GameObject obj = PoolManager.instance.UsePool(key);
             if (obj == null)
             {
-                return;
+                continue;
             }
             Vector3 pos = GetSpawnPos(obj);
             obj.transform.position = pos;
@@ -95,6 +119,8 @@ public class Spawner : MonoBehaviour
                 monster.SetTarget(player);
                 monster.ondie -= ReSpawn;
                 monster.ondie += ReSpawn;
+              //  monster.onReturn -= Return;
+              //  monster.onReturn += Return;
             }
             PoolManager.instance.ActivePool(obj);
 

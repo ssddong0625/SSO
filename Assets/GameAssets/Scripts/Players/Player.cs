@@ -12,15 +12,16 @@ namespace GameAssets.Scripts.Players
     {
         public WeaponData data;
         [SerializeField]
-        private int hp;
+        private float hp;
         [SerializeField]
         private int atk;
+        float maxHP;
         public GameObject prefab;
         public Transform weaponHand;
         public Weapon weapon;
         public PoolKey key;
          
-        public int HP
+        public float HP
         {
             get { return hp; }
             set
@@ -30,6 +31,14 @@ namespace GameAssets.Scripts.Players
                 {
                     Destroy(gameObject);
                 }
+            }
+        }
+        public float MaxHp
+        {
+            get { return maxHP; }
+            set
+            {
+                maxHP = value;
             }
         }
         public void InitData()
@@ -59,12 +68,16 @@ namespace GameAssets.Scripts.Players
         }
         public void Awake()
         {
-            hp = 100;
-            InitData();
+           
             
         }
+        public void Start()
+        {
+            hp = 100;
+            MaxHp = hp;
+            InitData();
+        }
 
-        
         public void Hit(int atk)
         {
             HP -= atk;
