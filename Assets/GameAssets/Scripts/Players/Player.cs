@@ -3,8 +3,9 @@ using GameAssets.Scripts.Weapons;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 namespace GameAssets.Scripts.Players
 {
@@ -15,18 +16,21 @@ namespace GameAssets.Scripts.Players
         private float hp;
         [SerializeField]
         private int atk;
-        float maxHP;
+        float maxHp;
         public GameObject prefab;
         public Transform weaponHand;
         public Weapon weapon;
         public PoolKey key;
-         
+        public Image playerHp;
+        public TextMeshPro text;
         public float HP
         {
             get { return hp; }
             set
             {
                 hp = value;
+                playerHp.fillAmount = hp / maxHp;
+                UiManager.instance.UpdatePlayerHpUi();
                 if (hp <= 0)
                 {
                     Destroy(gameObject);
@@ -35,10 +39,10 @@ namespace GameAssets.Scripts.Players
         }
         public float MaxHp
         {
-            get { return maxHP; }
+            get { return maxHp; }
             set
             {
-                maxHP = value;
+                maxHp = value;
             }
         }
         public void InitData()

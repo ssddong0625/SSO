@@ -9,7 +9,7 @@ using System;
 namespace GameAssets.Scripts.Players
 {
     [RequireComponent(typeof(CharacterController))]
-    public class PlayerMove : MonoBehaviour
+    public class PlayerController : MonoBehaviour
     {
         CharacterController cc;
         Animator animator;
@@ -23,7 +23,7 @@ namespace GameAssets.Scripts.Players
         protected float minX = -60f;
         [SerializeField]
         protected float maxX = 60f;
-
+        float speed;
         [SerializeField]
         Transform player;
         [SerializeField]
@@ -38,9 +38,13 @@ namespace GameAssets.Scripts.Players
         float useGauge = 0.1f;
         float gauge = 100f;
         float maxGauge= 100f;
-
+        
         public event Action onRun;
-
+      
+        [SerializeField]
+        float jumpPower;
+        [SerializeField]
+        float runSpeed;
         public float Gauge
         {
             get { return gauge; }
@@ -55,6 +59,7 @@ namespace GameAssets.Scripts.Players
             yaw = player.eulerAngles.y;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            
         }
 
         //잠깐 만들어놓음 나중에 지울것.
@@ -75,8 +80,7 @@ namespace GameAssets.Scripts.Players
         }
         public void Move()
         {
-            if (Cursor.visible) { return; } 
-            
+            if (Cursor.visible) { return; }
             float x = Input.GetAxisRaw("Horizontal");
             float z = Input.GetAxisRaw("Vertical");
             moveInput = new Vector3(x, 0f, z);
@@ -100,34 +104,87 @@ namespace GameAssets.Scripts.Players
             Vector3 velocity = moveDir * moveSpeed;
             velocity.y = verticalVelocity;
             cc.Move(velocity * Time.deltaTime);
-            float speed = moveInput.magnitude;
-            animator.SetFloat("Speed", speed);
+            speed = moveInput.sqrMagnitude;
+            /*
+              float speed = moveInput.magnitude;
+              animator.SetFloat("Speed", speed);
 
+              if (Input.GetKeyDown(KeyCode.Mouse0))
+              {
+                  weapon.Attack();
+              }
+              if (Input.GetKeyDown(KeyCode.E))
+              {
+                  animator.SetTrigger("Roll");
+              }
+              if (Input.GetKey(KeyCode.LeftShift))
+              {
+                  if (gauge <= 0) { gauge = 0;  return; }
+                  gauge -= useGauge;
+                  moveSpeed = 10f;
+                  animator.SetFloat("Speed",2 *speed);
+                  onRun?.Invoke();
+              }
+              else
+              {
+                  if (gauge >= 100) { gauge = 100; return; }
+                  moveSpeed = 5f;
+                  gauge += useGauge;
+                  onRun?.Invoke();
+              }
+            */
+        }
+        public void Attacking()
+        {
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 weapon.Attack();
             }
+        }
+        public void Moving()
+        {
+            animator.SetFloat("Speed", speed);
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                if (gauge <= 0) { gauge = 0;  return; }
+                if (gauge <= 0) { gauge = 0; return; }
                 gauge -= useGauge;
                 moveSpeed = 10f;
-                animator.SetFloat("Speed",2 *speed);
+                animator.SetFloat("Speed", runSpeed * speed);
                 onRun?.Invoke();
             }
-            else
+           else
             {
                 if (gauge >= 100) { gauge = 100; return; }
                 moveSpeed = 5f;
                 gauge += useGauge;
                 onRun?.Invoke();
             }
-
-
-          
         }
+        /*
+        public void Rolling()
+        {
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+              animator.SetFloat("Roll", speed);
+            }
+            
+        }
+        */
+       
 
+        public void Jumping()
+        {
+            if (cc.isGrounded && verticalVelocity < 0f)
+            {
+                verticalVelocity = -1f;
+            }
+            if (Input.GetKeyDown(KeyCode.Space)&&cc.isGrounded)
+            {
+                animator.SetTrigger("Jump");
+                verticalVelocity = jumpPower;
+            }
 
+        }
         IEnumerator DisapearCo()
         {
             yield return new WaitForSeconds(3f);
@@ -135,8 +192,12 @@ namespace GameAssets.Scripts.Players
         }
         void Update()
         {
+            Attacking();
+           // Rolling();
+            Moving();
             Move();
             UnLockCursor();
+            Jumping();
         }
     }
 

@@ -615,6 +615,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 8bfedd0a01f4ca546bf935fb8a65f7fb, type: 2}
   atk: 0
+  hp: 0
   animator: {fileID: 95706204029656638}
   boxCol: {fileID: 6330142215300996123}
   target: {fileID: 0}
@@ -624,7 +625,10 @@ MonoBehaviour:
   exitRange: 0
   spawnPos: {x: 0, y: 0, z: 0}
   img: {fileID: 7065798883764337739}
-  spanwer: {fileID: 0}
+  text: {fileID: 0}
+  hitLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!54 &7916100267659661754
 Rigidbody:
   m_ObjectHideFlags: 0

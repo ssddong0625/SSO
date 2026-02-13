@@ -1,6 +1,7 @@
 using GameAssets.Scripts.Monsters;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MonsterHitBox : MonoBehaviour,IHitAble
@@ -13,16 +14,16 @@ public class MonsterHitBox : MonoBehaviour,IHitAble
     public void Hit(int atk)
     {
         monster.Hp -= atk;
+        //monster.text.text = $"{atk}";
+        UiManager.instance.MonsterHpView(monster);
+
+      //  StartCoroutine(DamageCo());
     }
 
-    void Start()
+    IEnumerator DamageCo()
     {
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        yield return new WaitForSeconds(0.5f);
+        monster.text.text = null;
     }
 }

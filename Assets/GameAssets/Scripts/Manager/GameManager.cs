@@ -40,6 +40,10 @@ namespace GameAssets.Scripts.Manager
                 exp = value;
             }
         }
+        public int Level
+        {
+            get { return level; }
+        }
 
         public int NeedExp()
         {
@@ -52,7 +56,7 @@ namespace GameAssets.Scripts.Manager
             {
                 exp -= NeedExp();
                 level++;
-
+                UiManager.instance.UpdateLevel();
             }
 
             onExpChanged?.Invoke();

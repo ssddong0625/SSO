@@ -43,6 +43,7 @@ public class PoolManager : MonoBehaviour
             Debug.Log("keyPrefab ¾øÀ½");
             return;
         }
+        if (pool.ContainsKey(key)) { return; }
         //if(key.prewarmCount)
 
         Queue<GameObject> q = new Queue<GameObject>(key.prewarmCount);

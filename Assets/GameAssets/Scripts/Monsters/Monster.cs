@@ -8,6 +8,9 @@ using GameAssets.Scripts.Manager;
 using UnityEngine.AI;
 using GameAssets.Scripts.Weapons;
 using UnityEngine.UI;
+using System.Diagnostics.Tracing;
+using UnityEditor.Build;
+using TMPro;
 
 
 namespace GameAssets.Scripts.Monsters
@@ -17,10 +20,14 @@ namespace GameAssets.Scripts.Monsters
         public MonsterData data;
         [SerializeField]
        int atk;
+        [SerializeField]
        float hp;
+        float speed;
        int exp;
         float maxHp;
         public event Action ondie;
+        public event Action bossPattern;
+        public event Action<Monster>  monsterHpView;
         //public event Action<GameObject> onReturn;
         //public event Action<Spawner> onspawner;
         public Animator animator;
@@ -35,13 +42,17 @@ namespace GameAssets.Scripts.Monsters
         public float exitRange;
         float nextAttack;
         HashSet<IHitAble> hits;
-
+        
         public Vector3 spawnPos;
 
        // public GameObject panel;
         public Image img;
 
-        public Spawner spanwer;
+        bool oneTime;
+        public  TMP_Text text;
+        [SerializeField]
+        LayerMask hitLayerMask;
+        //public Spawner spanwer;
         public int Atk
         {
             get { return atk; }
@@ -57,6 +68,15 @@ namespace GameAssets.Scripts.Monsters
             {
                 hp = value;
                 img.fillAmount = hp / maxHp;
+                animator.SetTrigger("TakeDamage");
+                
+                
+                if (!oneTime&&hp/maxHp<=0.5f)
+                {
+                    oneTime= true; 
+                    bossPattern?.Invoke();
+                }
+
                 if (hp <= 0)
                 {
                     hp = 0;
@@ -77,6 +97,7 @@ namespace GameAssets.Scripts.Monsters
        
         public void Awake()
         {
+            speed = 1f;
            // panel.gameObject.SetActive(false);
           //  InitData();
             TryGetComponent(out agent);
@@ -111,17 +132,21 @@ namespace GameAssets.Scripts.Monsters
                 {
                     nextAttack = Time.time + attackCool;
                     Attack();
+                    speed = 0f;
                 }
                 return;
             }
             if (distance <= detectiveRange)
             {
+                speed = 1f;
                 ChaseTarget();
+                animator.SetFloat("Walk", speed);
             }
             else
             {
                 StopMoving();
                 agent.SetDestination(spawnPos);
+                speed = 0f;
             }
         }
         private void OnDrawGizmosSelected()
@@ -179,7 +204,8 @@ namespace GameAssets.Scripts.Monsters
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("맞혔습니다");
+            Debug.Log("터틀이 플레이어를 맞혔습니다");
+            if (((1 << other.gameObject.layer) & hitLayerMask.value) == 0) { return; }
             IHitAble hit = other.GetComponent<IHitAble>();
             if (!hits.Add(hit))
             {
