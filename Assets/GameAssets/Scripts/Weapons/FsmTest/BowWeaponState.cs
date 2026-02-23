@@ -18,36 +18,39 @@ public class BowWeaponState : WeaponState
     {
         
         bow=playerEquip.CurrentWeaponObj.GetComponent<Bow>();
-        bow.BowChange();
+        //bow.BowChange();
         playerEquip.PlayerAnimator.runtimeAnimatorController = data.controller;
         
        // bow.BowChange();
     }
-
     public override void Exit()
     {
-
-        
     }
-
     public override void UpdateState()
     {
         if (Input.GetMouseButton(1))
         {
             playerEquip.PlayerAnimator.SetTrigger("Ready");
+            playerEquip.PlayerAnimator.ResetTrigger("GoHome");
             GameManager.instance.UiManager.crossHead.gameObject.SetActive(true);
         }
         else
         {
+            playerEquip.PlayerAnimator.SetTrigger("GoHome");
             playerEquip.PlayerAnimator.ResetTrigger("Ready");
             GameManager.instance.UiManager.crossHead.gameObject.SetActive(false);
         }
             bool aiming = Input.GetMouseButton(1);
         if (aiming && Input.GetMouseButtonDown(0))
         {
-            playerEquip.PlayerAnimator.SetTrigger("Attack");
-            playerEquip.PlayerAnimator.SetFloat("AttackSpeed",1);
-         
+            if (Time.time >= nextAttack)
+            {
+                nextAttack = Time.time + bow.data.attackCoolDown;
+                playerEquip.PlayerAnimator.SetTrigger("Attack");
+                playerEquip.PlayerAnimator.SetFloat("AttackSpeed", 1);
+            }
+           // playerEquip.PlayerAnimator.SetTrigger("Attack");
+           // playerEquip.PlayerAnimator.SetFloat("AttackSpeed",1);
            
         }
         

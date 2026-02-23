@@ -9,7 +9,7 @@ public abstract class WeaponState
     protected WeaponStateMachine fsm;
     protected PlayerEquip playerEquip;
     protected Weapon weapon;
-    protected float nextAttack;
+    protected float nextAttack=-999f;
     protected WeaponState(WeaponStateMachine fsm, PlayerEquip playerEquip)
     {
         this.fsm = fsm;

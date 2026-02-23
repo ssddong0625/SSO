@@ -61,6 +61,8 @@ public class PlayerStatus
         while (exp >= NeedExp())
         {
             exp -= NeedExp();
+            hp= hp + 5;
+            maxHp=hp;
             level++;
             onLevelUp?.Invoke();
         }

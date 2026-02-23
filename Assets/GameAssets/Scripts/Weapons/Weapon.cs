@@ -10,7 +10,7 @@ namespace GameAssets.Scripts.Weapons
     public class Weapon : MonoBehaviour
     {
         public WeaponData data;
-        int atk;
+        public int atk;
         //float atkSpeed;
       
         [SerializeField]
@@ -26,8 +26,9 @@ namespace GameAssets.Scripts.Weapons
 
         public Transform GripPoint => gripPoint;
         
+        
 
-        private void Awake()
+        protected void Awake()
         {
             InitData();
             

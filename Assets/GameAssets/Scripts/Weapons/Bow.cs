@@ -15,6 +15,7 @@ public class Bow : Weapon
     Transform firePoint;
     [SerializeField]
     LayerMask layerMask;
+    
     private void OnEnable()
     {
         
@@ -40,7 +41,6 @@ public class Bow : Weapon
     // }
     public override void Attack()
     {
-        
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
         if (Physics.Raycast(ray, out hit, 100f, layerMask))
@@ -56,6 +56,23 @@ public class Bow : Weapon
             }
         }
 
+    }
+    public  void Skill()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
+        if (Physics.Raycast(ray, out hit, 100f, layerMask))
+        {
+            Monster mon = hit.collider.GetComponentInParent<Monster>();
+            IHitAble hits = hit.collider.GetComponent<IHitAble>();
+            if (hits != null)
+            {
+                Debug.Log(hits);
+                mon.SetAttacker(transform);
+                hits.Hit(10*data.atk);
+
+            }
+        }
     }
 }
 

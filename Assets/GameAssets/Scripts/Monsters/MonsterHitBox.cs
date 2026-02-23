@@ -10,7 +10,7 @@ public class MonsterHitBox : MonoBehaviour,IHitAble
 {
     [SerializeField]
     Monster monster;
-    public event Action onHitDamage;
+  
 
     // Start is called before the first frame update
 

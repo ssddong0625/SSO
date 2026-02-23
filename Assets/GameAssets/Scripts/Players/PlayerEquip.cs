@@ -53,18 +53,6 @@ public class PlayerEquip : MonoBehaviour
 
             return;
         }
-
-
-        /*
-        if(weapon!=null && weapon.controller != null)
-        {
-            playerAnimator.runtimeAnimatorController = weapon.controller;
-        }
-        else
-        {
-            playerAnimator.runtimeAnimatorController = noneWeapon.controller;
-        }
-        */
         if (weapon.type == WeaponType.Bow)
         {
             currentWeaponObj.transform.SetParent(bowSocket);
@@ -83,13 +71,6 @@ public class PlayerEquip : MonoBehaviour
     }
     public void Unequip()
     {
-        /*
-        if (currentWeaponObj != null)
-        {
-            Destroy(currentWeaponObj);
-            currentWeaponObj = null;
-        }
-        */
         Equip(startWeapon);
     }
 
@@ -132,38 +113,22 @@ public class PlayerEquip : MonoBehaviour
              
         }
     }
-
-    /*
-    public void EquipWeapon()
+    public void SkillEvent()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (currentWeapon.type == WeaponType.Bow)
         {
-            Equip(noneWeapon);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            Equip(swordWeapon);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            Equip(bowWepon);
+         var bow = currentWeaponObj.GetComponent<Bow>();
+         bow.Skill();
+
         }
     }
-    */
-
-
-    public void Awake()
-    {
-        
-    }
+    
+   
     public void Start()
     {
         OnWeaponChanged?.Invoke(startWeapon);
     }
-    public void Update()
-    {
-     //   EquipWeapon();
-    }
+  
 
 }
 

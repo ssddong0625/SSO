@@ -11,60 +11,19 @@ using UnityEngine.UI;
 
 namespace GameAssets.Scripts.Players
 {
-    public class Player : MonoBehaviour//, IHitAble
+    public class Player : MonoBehaviour
     {
-      //  public WeaponData data;
-        [SerializeField]
-        private float hp;
+     
         Animator animator;
         public PlayerStatus player;
-        float maxHp;
-        //public GameObject prefab;
         public Transform weaponHand;
         Weapon weapon;
-       // public PoolKey key;
-        public Image playerHp;
-        public TextMeshPro text;
-       // public float HP
-       // {
-       //     get { return hp; }
-       //     set
-       //     {
-       //         hp = value;
-       //         playerHp.fillAmount = hp / maxHp;
-       //         GameManager.instance.UiManager.PlayerRefreshHpUiText();
-       //         if (hp <= 0)
-       //         {
-       //             Destroy(gameObject);
-       //         }
-       //     }
-       // }
-        public float MaxHp
-        {
-            get { return maxHp; }
-            set
-            {
-                maxHp = value;
-            }
-        }
-        /*
-        public float Exp
-        {
-            get { return exp; }
-            set { exp = value; }
-        }
-        */
-        //public void InitData()
-        //{
-        //    atk = data.atk;
-        //    prefab = data.prefab;
-        //}
-        /* public void Equip()
-         {
-             Instantiate(prefab, weaponHand);
-             prefab.transform.SetParent(weaponHand);
-         }
-        */
+       
+       // public Image playerHp;
+      //  public TextMeshPro text;
+       
+
+       
         public Animator Animator => animator;
       
         public void Attack()
@@ -76,7 +35,6 @@ namespace GameAssets.Scripts.Players
             }
             weapon.HateAttack();
             weapon.hitCollider.isTrigger = true;
-        //    onAttack?.Invoke();
             StartCoroutine(TriggerCo());
             
         }
@@ -88,7 +46,6 @@ namespace GameAssets.Scripts.Players
         public void Awake()
         {
             animator= GetComponent<Animator>();
-         //  weapon = GetComponentInChildren<Weapon>();
         }
 
         public void Update()
@@ -97,22 +54,10 @@ namespace GameAssets.Scripts.Players
         }
         public void Start()
         {
-          //  hp = 100;
-            //MaxHp = hp;
-            //InitData();
+          
         }
 
-        /*
-        public void Hit(int atk)
-        {
-            player.Hp -= atk;
-            if (player.Hp <= 0)
-            {
-                Destroy(gameObject);
-            }
-            
-        }
-        */
+      
       
      
 

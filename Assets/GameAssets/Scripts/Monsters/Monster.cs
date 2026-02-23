@@ -27,15 +27,11 @@ namespace GameAssets.Scripts.Monsters
         float maxHp;
         public event Action ondie;
         public event Action bossPattern;
-       // public event Action<Monster>  monsterHpView;
-        //public event Action<GameObject> onReturn;
-        //public event Action<Spawner> onspawner;
         public Animator animator;
         [SerializeField]
         BoxCollider boxCol;
         NavMeshAgent agent;
         public Transform target;
-       // public Vector3 returnMonster;
         public int attackRange;
         public float attackCool;
         public float detectiveRange;
@@ -47,15 +43,12 @@ namespace GameAssets.Scripts.Monsters
         public Vector3 spawnPos;
 
         public Transform lastAttacker;
-
-       // public GameObject panel;
         public Image img;
 
         bool oneTime;
         public  TMP_Text text;
         [SerializeField]
         LayerMask hitLayerMask;
-        //public Spawner spanwer;
         public int Atk
         {
             get { return atk; }
@@ -96,16 +89,11 @@ namespace GameAssets.Scripts.Monsters
                 maxHp = value;
             }
         }
-
-       
         public void Awake()
         {
             speed = 0f;
-           // panel.gameObject.SetActive(false);
-          //  InitData();
             TryGetComponent(out agent);
             hits=new HashSet<IHitAble>();
-            // TryGetComponent(out boxCol);
             img.gameObject.SetActive(true);
         }
         public void Start()
@@ -128,17 +116,7 @@ namespace GameAssets.Scripts.Monsters
                 return;
             }
             float distance = Vector3.Distance(transform.position,target.position);
-            //  if (distance <= attackRange)
-            //  {
-            //      StopMoving();
-            //          Attack();
-            //          speed = 0f;
-            //      //if (Time.time >= nextAttack)
-            //      //{
-            //      //    nextAttack = Time.time + attackCool;
-            //      //}
-            //
-            //  }
+          
             if (lastAttacker == null)
             {
                 if (distance <= detectiveRange)
@@ -150,10 +128,7 @@ namespace GameAssets.Scripts.Monsters
                         StopMoving();
                         Attack();
                         speed = 0f;
-                        //if (Time.time >= nextAttack)
-                        //{
-                        //    nextAttack = Time.time + attackCool;
-                        //}
+                       
 
                     }
 
@@ -178,32 +153,7 @@ namespace GameAssets.Scripts.Monsters
                     speed = 0f;
                 }
             }
-          /*
-            if (distance <= detectiveRange)
-            {
-                ChaseTarget();
-                animator.SetFloat("Walk", speed);
-                if (distance <= attackRange)
-                {
-                    StopMoving();
-                    Attack();
-                    speed = 0f;
-                    //if (Time.time >= nextAttack)
-                    //{
-                    //    nextAttack = Time.time + attackCool;
-                    //}
-
-                }
-                
-
-            }
-            else
-            {
-                StopMoving();
-                agent.SetDestination(spawnPos);
-                speed = 1f;
-            }
-          */
+      
         }
         private void OnDrawGizmosSelected()
         {
@@ -245,7 +195,6 @@ namespace GameAssets.Scripts.Monsters
             int randIndex = UnityEngine.Random.Range(0, data.dropItem.Length);
             Instantiate(data.dropItem[randIndex],transform.position, Quaternion.identity);
             ondie?.Invoke();
-            //onReturn?.Invoke(gameObject);
         }
      
         IEnumerator StopMovingCo()
@@ -256,16 +205,8 @@ namespace GameAssets.Scripts.Monsters
 
         public void AddExp()
         {
-           // GameManager.instance.Exp += exp;
         }
-        /*
-        public void Hit(int atk)
-        {
-            Hp -= atk;
-            animator.SetTrigger("TakeDamage");
-            Debug.Log($"맞았습니다 남은 Hp는{Hp}");
-        }
-        */
+        
 
         private void OnTriggerEnter(Collider other)
         {
@@ -327,18 +268,14 @@ namespace GameAssets.Scripts.Monsters
             exp = data.exp;
             atk = data.atk;
             lastAttacker = null;
-            
-            //  panel.gameObject.SetActive(false);
+          
         }
         public void TakeDamage(int atk)
         {
             Hp -= atk;
             GameManager.instance.UiManager.MonsterHpView(this);
             
-            //onHitDamage?.Invoke();
-
-            //monster.text.text = $"{atk}";
-            //  StartCoroutine(DamageCo());
+            
         }
 
         public void SetAttacker(Transform attacker)

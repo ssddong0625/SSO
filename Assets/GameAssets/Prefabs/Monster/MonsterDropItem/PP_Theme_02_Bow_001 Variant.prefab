@@ -68,6 +68,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PP_Theme_02_Bow_001 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4816641643443686787, guid: a289b446aad1c354c849ab51a03a78ab,
+        type: 3}
+      propertyPath: poolParent
+      value: 
+      objectReference: {fileID: 723701356201908480}
     m_RemovedComponents:
     - {fileID: 167942267028406320, guid: a289b446aad1c354c849ab51a03a78ab, type: 3}
     m_RemovedGameObjects: []
@@ -101,3 +106,9 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 1024
+--- !u!4 &723701356201908480 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3595557804323297469, guid: a289b446aad1c354c849ab51a03a78ab,
+    type: 3}
+  m_PrefabInstance: {fileID: 4318642295847043517}
+  m_PrefabAsset: {fileID: 0}

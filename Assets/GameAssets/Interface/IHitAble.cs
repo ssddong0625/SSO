@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-interface IHitAble
+public interface IHitAble
 {
     void Hit(int atk);
 }

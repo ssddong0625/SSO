@@ -30,6 +30,10 @@ public class UiManager : MonoBehaviour
     public GameObject runGaugePanel;
     [SerializeField]
     Image playerSkillGauge;
+    [SerializeField]
+    Image skillCool;
+    [SerializeField]
+    TMP_Text skillCoolText;
 
     [Header("테스트용")]
     public Image crossHead;
@@ -37,17 +41,8 @@ public class UiManager : MonoBehaviour
     TMP_Text monsterHpTextView;
     [SerializeField]
     Image monsterHpImgView;
-    //public event Action<Monster> monsterHpView;
     private void Awake()
     {
-       // if (instance == null)
-       // {
-       //     instance = this;
-       // }
-       // else
-       // {
-       //     Destroy(gameObject);
-       // }   
         monsterHpImgView.gameObject.SetActive(false);
     }
     public void MonsterHpView(Monster monster)
@@ -57,16 +52,8 @@ public class UiManager : MonoBehaviour
         if (monster.Hp <= 0)
         {
             monsterHpImgView.gameObject.SetActive(false);
-            
-            
         }
-       // monster.monsterHpView -= MonsterHpView;
-        //monster.monsterHpView += MonsterHpView;
-        
-
     }
-
-    
 
     public void Start()
     {
@@ -78,30 +65,14 @@ public class UiManager : MonoBehaviour
         playerGauge.onRun += CharacterRun;
         StartCoroutine(UiSettingCo());
     }
-    /*
-    private void OnEnable()
-    {
-        if (GameManager.instance != null)
-        {
-            GameManager.instance.onExpChanged += RefreshExpUI;
-        }
-        RefreshExpUI();
-    }
-
-    private void OnDisable()
-    {
-        if (GameManager.instance != null)
-        {
-            GameManager.instance.onExpChanged -= RefreshExpUI;
-        }
-    }
-    */
+   
     IEnumerator UiSettingCo()
     {
         yield return null;
         PlayerRefreshHpUiText();
         PlayerRefreshHpUiImg();
         UpdateLevel();
+        
 
     }
     private void SetActive()
@@ -126,6 +97,7 @@ public class UiManager : MonoBehaviour
     public void Update()
     {
         SetActive();
+        SkillCool();
     }
     private void RefreshHp()
     {
@@ -138,23 +110,24 @@ public class UiManager : MonoBehaviour
         GameManager.instance.PlayerStauts.onHpRefresh += PlayerRefreshHpUiImg;
         GameManager.instance.PlayerStauts.onHpRefresh += PlayerRefreshHpUiText;
         GameManager.instance.Skill.onSkill+= PlayerSkillUiImg;
-
+        GameManager.instance.Skill.useSkill += SkillCool;
     }
     private void OnDisable()
     {
         
-        GameManager.instance.PlayerStauts.onExpChanged -= RefreshExpUI;
         playerGauge.onRun -= CharacterRun;
+        GameManager.instance.PlayerStauts.onExpChanged -= RefreshExpUI;
         GameManager.instance.PlayerStauts.onHpRefresh -= PlayerRefreshHpUiImg;
         GameManager.instance.PlayerStauts.onHpRefresh -= PlayerRefreshHpUiText;
         GameManager.instance.Skill.onSkill -= PlayerSkillUiImg;
+        GameManager.instance.Skill.useSkill -= SkillCool;
     }
     private void CharacterRun()
     {
         runGaugeImg.fillAmount = playerGauge.Gauge / playerGauge.MaxGauge;
         
     }
-    private void PlayerRefreshHpUiImg()
+    public void PlayerRefreshHpUiImg()
     {
        playerHpImg.fillAmount= GameManager.instance.PlayerStauts.Hp / GameManager.instance.PlayerStauts.MaxHp;
     }
@@ -171,6 +144,22 @@ public class UiManager : MonoBehaviour
     private void PlayerSkillUiImg()
     {
         playerSkillGauge.fillAmount = GameManager.instance.Skill.SkillGague / GameManager.instance.Skill.SkillMaxGague;
+    }
+    private void SkillCool()
+    {
+        float remain = GameManager.instance.Skill.GetRemainTIme();
+        if (remain > 0f)
+        {
+            float ratio = remain / GameManager.instance.Skill.SkillCoolTime;
+            skillCool.fillAmount = ratio;
+            skillCoolText.text=Mathf.CeilToInt(remain).ToString();
+            skillCoolText.gameObject.SetActive(true);
+        }
+        else
+        {
+            skillCool.fillAmount = 0f;
+            skillCoolText.gameObject.SetActive(false);
+        }
     }
 
 }

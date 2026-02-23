@@ -22,29 +22,22 @@ namespace GameAssets.Scripts.Manager
         private CameraManager cameraManager;
         [SerializeField]
         private Player player;
-        
+        [SerializeField]
+        private PlayerEquip playerEquip;
         private PlayerSkill skill = new PlayerSkill();
         private PlayerStatus playerStatus = new PlayerStatus();
 
-
-
-
         public Player Player => player;
+        public PlayerEquip PlayerEquip => playerEquip;
         public PlayerStatus PlayerStauts => playerStatus;
+        
         public PlayerSkill Skill => skill;
         public UiManager UiManager => uiManager;
         public CameraManager CameraManager => cameraManager;
         public SoundManager SoundManager => soundManager;
 
 
-
-       // [SerializeField]
-     //   float exp=0;
-      //  [SerializeField]
-     //   int level=1;
-       // float levelUpExp=100;
-     //   float expStep=1.15f;
-      //  public event Action onExpChanged;
+    
         private void Awake()
         {
             if (instance == null)
@@ -60,10 +53,7 @@ namespace GameAssets.Scripts.Manager
             playerStatus.onLevelUp += HandleLevelUp;
             playerStatus.onDie -= EndScene;
             playerStatus.onDie += EndScene;
-            //exp = 0;
-            //level = 1;
-            //levelUpExp = 100;
-            //expStep = 1.15f;
+          
         }
 
         private void HandleLevelUp()
@@ -71,6 +61,8 @@ namespace GameAssets.Scripts.Manager
             if(uiManager != null)
             {
                 uiManager.UpdateLevel();
+                uiManager.PlayerRefreshHpUiText();
+                uiManager.PlayerRefreshHpUiImg();
             }
             else
             {
@@ -88,38 +80,6 @@ namespace GameAssets.Scripts.Manager
         
         }
 
-        
-        
-        
-       // public float Exp
-       // {
-       //     get { return exp; }
-       //     set
-       //     {
-       //         exp = value;
-       //     }
-       // }
-       // public int Level
-       // {
-       //     get { return level; }
-       // }
-       // 
-       // public int NeedExp()
-       // {
-       //     return Mathf.CeilToInt(levelUpExp * Mathf.Pow(expStep, level - 1));
-       // }
-       // public void AddExp(int amount)
-       // {
-       //     exp += amount;
-       //     while (exp >= NeedExp())
-       //     {
-       //         exp -= NeedExp();
-       //         level++;
-       //         UiManager.instance.UpdateLevel();
-       //     }
-       //
-       //     onExpChanged?.Invoke();
-       // }
-
+    
     }
 }

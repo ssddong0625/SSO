@@ -42,8 +42,8 @@ GameObject:
   - component: {fileID: 3595557804323297469}
   - component: {fileID: 453217939841996568}
   - component: {fileID: 2427106056267965394}
-  - component: {fileID: 167942267028406320}
   - component: {fileID: 2627724464140628703}
+  - component: {fileID: 9135529687169997695}
   m_Layer: 0
   m_Name: PP_Theme_02_Bow_001
   m_TagString: Untagged
@@ -118,30 +118,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &167942267028406320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4228365931688133127}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3df836470a95a944cb944aed69cf5e06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 49a39d87301343e4589767ca1504c630, type: 2}
-  hitLayermask:
-    serializedVersion: 2
-    m_Bits: 2048
-  attackSpeed: 0
-  hitCollider: {fileID: 2627724464140628703}
-  gripPoint: {fileID: 62546138480207240}
-  key: {fileID: 11400000, guid: 374e3423c7d5c2044ba997a9cb4a6150, type: 2}
-  firePoint: {fileID: 2891858340533933548}
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 2048
 --- !u!65 &2627724464140628703
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -163,6 +139,31 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.40245116, y: 1.5650086, z: 0.11166441}
   m_Center: {x: -0.106174506, y: 0, z: -0.00013396889}
+--- !u!114 &9135529687169997695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4228365931688133127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3df836470a95a944cb944aed69cf5e06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: 49a39d87301343e4589767ca1504c630, type: 2}
+  atk: 0
+  hitLayermask:
+    serializedVersion: 2
+    m_Bits: 2048
+  attackSpeed: 0
+  hitCollider: {fileID: 2627724464140628703}
+  gripPoint: {fileID: 62546138480207240}
+  key: {fileID: 11400000, guid: 374e3423c7d5c2044ba997a9cb4a6150, type: 2}
+  firePoint: {fileID: 2891858340533933548}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!1 &7994648680957741213
 GameObject:
   m_ObjectHideFlags: 0
@@ -188,7 +189,7 @@ Transform:
   m_GameObject: {fileID: 7994648680957741213}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.007, y: 0, z: 0}
+  m_LocalPosition: {x: 0.753, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
