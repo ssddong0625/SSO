@@ -1,16 +1,16 @@
+using GameAssets.Scripts.Data;
+using GameAssets.Scripts.Manager;
 using GameAssets.Scripts.Players;
+using GameAssets.Scripts.Weapons;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using GameAssets.Scripts.Data;
-using GameAssets.Scripts.Manager;
-using UnityEngine.AI;
-using GameAssets.Scripts.Weapons;
-using UnityEngine.UI;
 using System.Diagnostics.Tracing;
-using UnityEditor.Build;
+using System.Threading;
 using TMPro;
+using UnityEngine;
+using UnityEngine.AI;
+using UnityEngine.UI;
 
 
 namespace GameAssets.Scripts.Monsters
@@ -27,7 +27,7 @@ namespace GameAssets.Scripts.Monsters
         float maxHp;
         public event Action ondie;
         public event Action bossPattern;
-        public event Action<Monster>  monsterHpView;
+       // public event Action<Monster>  monsterHpView;
         //public event Action<GameObject> onReturn;
         //public event Action<Spawner> onspawner;
         public Animator animator;
@@ -40,10 +40,13 @@ namespace GameAssets.Scripts.Monsters
         public float attackCool;
         public float detectiveRange;
         public float exitRange;
-        float nextAttack;
+        [SerializeField]
+        float nextAttack = -999f;
         HashSet<IHitAble> hits;
         
         public Vector3 spawnPos;
+
+        public Transform lastAttacker;
 
        // public GameObject panel;
         public Image img;
@@ -97,7 +100,7 @@ namespace GameAssets.Scripts.Monsters
        
         public void Awake()
         {
-            speed = 1f;
+            speed = 0f;
            // panel.gameObject.SetActive(false);
           //  InitData();
             TryGetComponent(out agent);
@@ -125,29 +128,82 @@ namespace GameAssets.Scripts.Monsters
                 return;
             }
             float distance = Vector3.Distance(transform.position,target.position);
-            if (distance <= attackRange)
+            //  if (distance <= attackRange)
+            //  {
+            //      StopMoving();
+            //          Attack();
+            //          speed = 0f;
+            //      //if (Time.time >= nextAttack)
+            //      //{
+            //      //    nextAttack = Time.time + attackCool;
+            //      //}
+            //
+            //  }
+            if (lastAttacker == null)
             {
-                StopMoving();
-                if (Time.time >= nextAttack)
+                if (distance <= detectiveRange)
                 {
-                    nextAttack = Time.time + attackCool;
+                    ChaseTarget();
+                    animator.SetFloat("Walk", speed);
+                    if (distance <= attackRange)
+                    {
+                        StopMoving();
+                        Attack();
+                        speed = 0f;
+                        //if (Time.time >= nextAttack)
+                        //{
+                        //    nextAttack = Time.time + attackCool;
+                        //}
+
+                    }
+
+
+                }
+                else
+                {
+                    StopMoving();
+                    agent.SetDestination(spawnPos);
+                    speed = 1f;
+                }
+
+            }
+            else
+            {
+                ChaseTarget();
+                animator.SetFloat("Walk", speed);
+                if (distance <= attackRange)
+                {
+                    StopMoving();
                     Attack();
                     speed = 0f;
                 }
-                return;
             }
+          /*
             if (distance <= detectiveRange)
             {
-                speed = 1f;
                 ChaseTarget();
                 animator.SetFloat("Walk", speed);
+                if (distance <= attackRange)
+                {
+                    StopMoving();
+                    Attack();
+                    speed = 0f;
+                    //if (Time.time >= nextAttack)
+                    //{
+                    //    nextAttack = Time.time + attackCool;
+                    //}
+
+                }
+                
+
             }
             else
             {
                 StopMoving();
                 agent.SetDestination(spawnPos);
-                speed = 0f;
+                speed = 1f;
             }
+          */
         }
         private void OnDrawGizmosSelected()
         {
@@ -158,6 +214,7 @@ namespace GameAssets.Scripts.Monsters
         }
         void ChaseTarget()
         {
+            speed = 1f;
             agent.isStopped = false;
             agent.SetDestination(target.position);
         }
@@ -165,6 +222,7 @@ namespace GameAssets.Scripts.Monsters
         
         public void StopMoving()
         {
+            speed = 0f;
             agent.isStopped = true;
             agent.ResetPath();
         }
@@ -181,13 +239,20 @@ namespace GameAssets.Scripts.Monsters
         {
             target = null;
             animator.SetTrigger("Die");
-            GameManager.instance.AddExp(exp);
+            GameManager.instance.PlayerStauts.AddExp(exp);
             yield return new WaitForSeconds(3f);
             PoolManager.instance.ReturnPool(gameObject);
+            int randIndex = UnityEngine.Random.Range(0, data.dropItem.Length);
+            Instantiate(data.dropItem[randIndex],transform.position, Quaternion.identity);
             ondie?.Invoke();
             //onReturn?.Invoke(gameObject);
         }
      
+        IEnumerator StopMovingCo()
+        {
+            yield return new WaitForSeconds(attackCool);
+            speed = 1f;
+        }
 
         public void AddExp()
         {
@@ -204,12 +269,10 @@ namespace GameAssets.Scripts.Monsters
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("터틀이 플레이어를 맞혔습니다");
             if (((1 << other.gameObject.layer) & hitLayerMask.value) == 0) { return; }
             IHitAble hit = other.GetComponent<IHitAble>();
             if (!hits.Add(hit))
             {
-                Debug.Log(" 몬스터 리턴 합니다");
                 return;
             }
             hit?.Hit(atk) ;
@@ -218,14 +281,27 @@ namespace GameAssets.Scripts.Monsters
 
         public void Attack()
         {
-            if(target == null)
+            if (target == null)
             {
                 return;
             }
-            hits.Clear();
-            boxCol.isTrigger = true;
-            animator.SetTrigger("Hit");
-            StartCoroutine(AttackTriggerCo());
+            if (Time.time >= nextAttack)
+            {
+                nextAttack = Time.time + attackCool;
+                hits.Clear();
+                boxCol.isTrigger = true;
+                animator.SetTrigger("Hit");
+                speed = 0f;
+                StartCoroutine(AttackTriggerCo());
+
+            }
+            
+            
+           // hits.Clear();
+           // boxCol.isTrigger = true;
+           // animator.SetTrigger("Hit");
+           // speed = 0f;
+           // StartCoroutine(AttackTriggerCo());
         }
         IEnumerator AttackTriggerCo()
         {
@@ -239,6 +315,7 @@ namespace GameAssets.Scripts.Monsters
             maxHp = data.maxHp;
             exp = data.exp;
             atk = data.atk;
+            attackCool= data.attackCool;
             boxCol.enabled = true;
             img.gameObject.SetActive(true);
         }
@@ -249,8 +326,26 @@ namespace GameAssets.Scripts.Monsters
             maxHp = data.maxHp;
             exp = data.exp;
             atk = data.atk;
+            lastAttacker = null;
+            
             //  panel.gameObject.SetActive(false);
         }
+        public void TakeDamage(int atk)
+        {
+            Hp -= atk;
+            GameManager.instance.UiManager.MonsterHpView(this);
+            
+            //onHitDamage?.Invoke();
+
+            //monster.text.text = $"{atk}";
+            //  StartCoroutine(DamageCo());
+        }
+
+        public void SetAttacker(Transform attacker)
+        {
+            lastAttacker= attacker;
+        }
+
     }
 
 

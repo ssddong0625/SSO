@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameAssets.Scripts.Weapons;
 using System;
+using GameAssets.Scripts.Data;
 
 
 
@@ -45,6 +46,8 @@ namespace GameAssets.Scripts.Players
         float jumpPower;
         [SerializeField]
         float runSpeed;
+
+
         public float Gauge
         {
             get { return gauge; }
@@ -134,19 +137,26 @@ namespace GameAssets.Scripts.Players
               }
             */
         }
+        /*
         public void Attacking()
         {
+            
+            weapon = GetComponentInChildren<Weapon>();
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                weapon.Attack();
+                animator.SetTrigger("Attack");
+                animator.SetFloat("AttackSpeed", weapon.attackSpeed);
+              //  weapon.Attack();
             }
+            
         }
+        */
         public void Moving()
         {
             animator.SetFloat("Speed", speed);
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                if (gauge <= 0) { gauge = 0; return; }
+                if (gauge <= 0) { gauge = 0; moveSpeed = 5f; return; }
                 gauge -= useGauge;
                 moveSpeed = 10f;
                 animator.SetFloat("Speed", runSpeed * speed);
@@ -171,7 +181,7 @@ namespace GameAssets.Scripts.Players
         }
         */
        
-
+       
         public void Jumping()
         {
             if (cc.isGrounded && verticalVelocity < 0f)
@@ -192,7 +202,7 @@ namespace GameAssets.Scripts.Players
         }
         void Update()
         {
-            Attacking();
+           // Attacking();
            // Rolling();
             Moving();
             Move();

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GameAssets.Scripts.Players;
+using System;
 
 namespace GameAssets.Scripts.Weapons
 {
@@ -11,32 +12,41 @@ namespace GameAssets.Scripts.Weapons
         public WeaponData data;
         int atk;
         //float atkSpeed;
-        //float nextAttack;
-        
-        public Animator animator;
+      
         [SerializeField]
-        LayerMask hitLayermask;
+        protected LayerMask hitLayermask;
         public float attackSpeed;
         public BoxCollider hitCollider;
         private HashSet<IHitAble> hits;
+        [SerializeField]
+        Transform gripPoint;
+        protected float nextAttack = -999f;
+        protected float attackCoolDown;
+       
 
+        public Transform GripPoint => gripPoint;
+        
 
         private void Awake()
         {
             InitData();
+            
             hitCollider=GetComponent<BoxCollider>();
             hits = new HashSet<IHitAble>();
         }
         public void Start()
         {
-          //  atkSpeed = 1.2f;
-            attackSpeed = 2f;
-            hitCollider.isTrigger = false;
+            if (hitCollider != null)
+            {
+              hitCollider.isTrigger = false;
+            }
             
         }
         public void InitData()
         {
             atk = data.atk;
+            attackSpeed=data.weaponSpeed;
+            attackCoolDown = data.attackCoolDown;
         }
         public int Atk
         {
@@ -49,33 +59,35 @@ namespace GameAssets.Scripts.Weapons
 
         public void HateAttack()
         {
+            /*
             if (hits == null)
             {
                 Debug.Log("HasSet 널");
             }
+            if (hits != null)
+            {
+                Debug.Log($"{hits}채워짐");
+            }
+            */
             hits.Clear();
         }
-        public void Attack()
+        
+        public virtual void Attack()
         {
-            animator.SetTrigger("Attack");
-            animator.SetFloat("AttackSpeed", attackSpeed);
-
+            
         }
-      
-        public void OnTriggerEnter(Collider other)
+        protected IEnumerator TriggerCo()
+        {
+            yield return new WaitForSeconds(0.2f);
+            hitCollider.isTrigger = false;
+        }
+
+        public void OnTriggerEnter(Collider other)  
         {
             if (((1 << other.gameObject.layer) & hitLayermask.value) == 0) { return; }
                 IHitAble hit = other.GetComponent<IHitAble>();
-                Debug.Log(" 되나 ?");
-               if (!hits.Add(hit)) { Debug.Log("플레이어 리턴하빈다"); return; }
+               if (!hits.Add(hit)) { Debug.Log("플레이어 리턴 합니다 중복체크 하세요"); return; }
                 hit?.Hit(atk);
-            /*
-            IHitAble hit = other.GetComponent<IHitAble>();
-            if (!hits.Add(hit)) { Debug.Log("리턴하빈다");  return; }
-            hitCollider.isTrigger = false;
-            
-            hit?.Hit(atk);
-            */
         }
     }
 

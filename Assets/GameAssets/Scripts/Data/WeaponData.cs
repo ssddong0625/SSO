@@ -14,8 +14,13 @@ namespace GameAssets.Scripts.Data
     public class WeaponData : ScriptableObject
     {
         public int atk;
+        public int weaponSpeed;
+        public float attackCoolDown;
         public WeaponType type;
+       
         public GameObject prefab;
+        public AnimatorOverrideController controller;
+       
 
     }
 

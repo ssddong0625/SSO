@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 211404abdb11d5841ab591060b8065e1, type: 3}
+  m_Name: TestBuild
+  m_EditorClassIdentifier: 
+  buildingName: 
+  placePrefab: {fileID: 6836764574130047723, guid: d91e42cc41f0411468314eeba2aaff8d,
+    type: 3}
+  previewPoolKey: {fileID: 11400000, guid: 5d185acf5c0cfe04b8ceef040b8c502a, type: 2}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  blockedLayer:
+    serializedVersion: 2
+    m_Bits: 7223
+  useGridSnap: 1
+  gridSize: 1
+  maxSlopeAngle: 25
+  maxGroundGap: 0.08
+  useMultiPointGroundCheck: 1
+  overlapEpsilon: 0.02
+  verboseBlockReason: 1

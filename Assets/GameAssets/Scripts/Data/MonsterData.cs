@@ -13,7 +13,8 @@ namespace GameAssets.Scripts.Data
         public int exp;
         public float hp;
         public float maxHp;
-        public GameObject dropItem;
+        public float attackCool;
+        public GameObject[] dropItem;
     }
 }
 

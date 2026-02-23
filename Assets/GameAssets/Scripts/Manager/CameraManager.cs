@@ -18,7 +18,7 @@ namespace GameAssets.Scripts.Manager
 
         public void SwapCamera()
         {
-            
+            /*
             if (Input.GetKeyDown(KeyCode.B))
             {
                 if (thirdPerson.Priority > onePerson.Priority)
@@ -30,6 +30,7 @@ namespace GameAssets.Scripts.Manager
                     ThirdPerson();
                 }
             }
+            */
         }
         public void Start()
         {

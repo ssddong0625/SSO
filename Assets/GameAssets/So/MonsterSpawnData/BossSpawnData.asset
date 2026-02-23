@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   key: {fileID: 11400000, guid: 24726e797a028a34a974cf22cb5dd771, type: 2}
   spawnPoint:
-  - {x: 70, y: 0, z: 70}
+  - {x: 60, y: 6.5, z: 65}
   spawnTime: 1

@@ -13,5 +13,8 @@ MonoBehaviour:
   m_Name: WeaponData
   m_EditorClassIdentifier: 
   atk: 100
+  weaponSpeed: 5
+  attackCoolDown: 1
   type: 0
-  prefab: {fileID: 919132149155446097, guid: 96ccab11a2e88aa429777491c084a3fd, type: 3}
+  prefab: {fileID: 8133399767090564659, guid: fa7576413fbf339459d948aa3d3ebbe5, type: 3}
+  controller: {fileID: 22100000, guid: 2ad3eb960bf0bda4ebf65f09c4b96cdb, type: 2}
