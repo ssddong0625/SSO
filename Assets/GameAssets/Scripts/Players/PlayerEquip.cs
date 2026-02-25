@@ -1,11 +1,8 @@
 using GameAssets.Scripts.Data;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using GameAssets.Scripts.Manager;
 using GameAssets.Scripts.Weapons;
-using UnityEditor.ShaderGraph;
 using System;
-using Unity.VisualScripting;
+using UnityEngine;
 
 public class PlayerEquip : MonoBehaviour
 {
@@ -21,6 +18,16 @@ public class PlayerEquip : MonoBehaviour
     
     [SerializeField]
     Animator playerAnimator;
+
+    bool bowAttack = true;
+    public bool BowAttack
+    {
+        get { return bowAttack; }
+        set
+        {
+            bowAttack = value;
+        }
+    }
     public Animator PlayerAnimator => playerAnimator;
 
     public WeaponData CurrentWeapon => currentWeapon;
@@ -80,6 +87,10 @@ public class PlayerEquip : MonoBehaviour
         weaponRoot.position = socket.position - (weaponRoot.rotation * grip.localPosition);
     }
 
+    public void ToggleAttack()
+    {
+        bowAttack=!bowAttack; 
+    }
     public void AttackEvent(WeaponType type)
     {
         /*
@@ -96,29 +107,34 @@ public class PlayerEquip : MonoBehaviour
             
         }
         */
-        
 
-        if (currentWeapon.type==WeaponType.Bow)
+        if (bowAttack)
         {
-            var bow = currentWeaponObj.GetComponent<Bow>();
-            bow.Attack();
+           if (currentWeapon.type==WeaponType.Bow)
+           {
+               var bow = currentWeaponObj.GetComponent<Bow>();
+               bow.Attack();
+               GameManager.instance.SoundManager.PlaySfx(SfxType.PlayerAttack);
+           }
+           else if (currentWeapon.type == WeaponType.Sword)
+           {
+               var sword =currentWeaponObj.GetComponent<Sword>();
+               sword.Attack();
+           }
+           else
+           {
+                
+           }
+
         }
-        else if (currentWeapon.type == WeaponType.Sword)
-        {
-            var sword =currentWeaponObj.GetComponent<Sword>();
-            sword.Attack();
-        }
-        else
-        {
-             
-        }
+        return;
     }
     public void SkillEvent()
     {
         if (currentWeapon.type == WeaponType.Bow)
         {
-         var bow = currentWeaponObj.GetComponent<Bow>();
-         bow.Skill();
+          var bow = currentWeaponObj.GetComponent<Bow>();
+          bow.Skill();
 
         }
     }

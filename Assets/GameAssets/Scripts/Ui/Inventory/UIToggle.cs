@@ -1,78 +1,152 @@
+using JetBrains.Annotations;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIToggle : MonoBehaviour
 {
-    [SerializeField] private GameObject inventoryPanel;
-    [SerializeField] private InventoryUI inventoryUI;
-    [SerializeField] private GameObject EquipmentPanel;
-    [SerializeField] private GameObject EquipmentUI;
-    [SerializeField] private GameObject WorldMapPanel;
+    [Header("Panels")]
+    [SerializeField] private GameObject inventoryPanel; 
+    [SerializeField] private GameObject equipmentPanel; 
+    [SerializeField] private GameObject mapPanel;       
+    [SerializeField] private GameObject escMenuPanel;
+    [SerializeField] private GameObject audioPanel;
+    [SerializeField] private GameObject mousePanel;
+    [SerializeField] private GameObject playerStatPanel;
+    
+    private readonly List<GameObject> openList = new List<GameObject>();
+    private bool isUiOpen;
+    public bool IsUiOpen => isUiOpen;
+    void Start()
+    {
+        SetPanel(inventoryPanel, false);
+        SetPanel(equipmentPanel, false);
+        SetPanel(mapPanel, false);
+        SetPanel(escMenuPanel, false);
+        openList.Clear();
+        RefreshState();
+    }
+    public void PanelKey()
+    {
+        
+        if (Input.GetKeyDown(KeyCode.I)) Toggle(inventoryPanel);
+        if (Input.GetKeyDown(KeyCode.E)) Toggle(equipmentPanel);
+        if (Input.GetKeyDown(KeyCode.M)) Toggle(mapPanel);
+        if (Input.GetKeyDown(KeyCode.Escape)) OnEscape();
+        if (Input.GetKeyDown(KeyCode.F1)) Toggle(playerStatPanel);
+        
+    }
+    void Update()
+    {
+        PanelKey();
+    }
 
-    private void Start()
+    void OnEscape()
     {
-        if (inventoryPanel != null)
-            inventoryPanel.SetActive(false);
-        if(EquipmentPanel!=null)EquipmentPanel.SetActive(false);
-        if (WorldMapPanel != null) WorldMapPanel.SetActive(false);
-    }
-    public void InventoryOC()
-    {
-        if (!Input.GetKeyDown(KeyCode.I)) { return; }
-        bool next = !inventoryPanel.activeSelf;
-        if (next)
+        if (mousePanel != null && mousePanel.activeSelf)
         {
-            inventoryPanel.SetActive(next);
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            inventoryPanel.SetActive(next);
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            if (next && inventoryUI != null)
-                inventoryUI.RefreshAll();
-        }
-    }
-    public void EquipmentOC()
-    {
-        if (!Input.GetKeyDown(KeyCode.E)) { return; }
-        bool next = !EquipmentPanel.activeSelf;
-        if (next)
-        {
-            EquipmentPanel.SetActive(next);
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            EquipmentPanel.SetActive(next);
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-    }
-    public void WorldMapOC()
-    {
-        if (!Input.GetKeyDown(KeyCode.M)) { return; }
-        bool next = !WorldMapPanel.activeSelf;
-        if (next)
-        {
-            WorldMapPanel.SetActive(next);
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            WorldMapPanel.SetActive(next);
-            Cursor.lockState= CursorLockMode.Locked;
-            Cursor.visible = false;
+            Close(mousePanel);
+            RefreshState();
+            return;
         }
 
+        if (audioPanel != null && audioPanel.activeSelf)
+        {
+            Close(audioPanel);
+            RefreshState();
+            return;
+        }
+
+        if (escMenuPanel != null && escMenuPanel.activeSelf)
+        {
+            Close(escMenuPanel);
+            RefreshState();
+            return;
+        }
+
+        if (openList.Count > 0)
+        {
+            CloseTop();
+            RefreshState();
+            return;
+        }
+
+        Open(escMenuPanel);
+        RefreshState();
     }
-    private void Update()
+    public void ToggleAudioButton()
     {
-       InventoryOC();
-        EquipmentOC();
-        WorldMapOC();
+        Toggle(audioPanel);
+        Close(escMenuPanel);
+        RefreshState();
+    }
+    public void ToggleEscButton()
+    {
+        Toggle(escMenuPanel);
+        Close(audioPanel);
+        RefreshState();
+    }
+    public void ToggleMouseButton()
+    {
+        Toggle(mousePanel);
+    }
+
+    void Toggle(GameObject panel)
+    {
+        if (!panel) return;
+
+        if (panel.activeSelf) Close(panel);
+        else Open(panel);
+
+        RefreshState();
+    }
+    void Open(GameObject panel)
+    {
+        if (!panel) return;
+        SetPanel(panel, true);
+        openList.Remove(panel);
+        openList.Add(panel);
+    }
+
+    void Close(GameObject panel)
+    {
+        if (!panel) return;
+        SetPanel(panel, false);
+        openList.Remove(panel);
+    }
+
+    void CloseTop()
+    {
+        int last = openList.Count - 1;
+        GameObject top = openList[last];
+        SetPanel(top, false);
+        openList.RemoveAt(last);
+    }
+
+    void RefreshState()
+    {
+        for (int i = openList.Count - 1; i >= 0; i--)
+        {
+            if (openList[i] == null || !openList[i].activeSelf)
+                openList.RemoveAt(i);
+        }
+
+        isUiOpen = openList.Count > 0;
+
+        if (isUiOpen)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
+    void SetPanel(GameObject panel, bool active)
+    {
+        if (panel) panel.SetActive(active);
     }
 }

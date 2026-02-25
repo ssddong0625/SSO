@@ -135,6 +135,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monster: {fileID: 1993470056953570279}
+  hitLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!1 &1850795407095492072
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,6 +477,7 @@ MonoBehaviour:
   exitRange: 0
   nextAttack: -999
   spawnPos: {x: 0, y: 0, z: 0}
+  lastAttacker: {fileID: 0}
   img: {fileID: 6672261564108112815}
   text: {fileID: 3776805840658376429}
   hitLayerMask:

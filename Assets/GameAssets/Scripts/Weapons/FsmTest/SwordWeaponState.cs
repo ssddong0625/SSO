@@ -34,7 +34,7 @@ public class SwordWeaponState : WeaponState
             {
                 nextAttack = Time.time + playerEquip.CurrentWeapon.attackCoolDown;
                 playerEquip.PlayerAnimator.SetTrigger("Attack");
-                playerEquip.PlayerAnimator.SetFloat("AttackSpeed", 5);
+                playerEquip.PlayerAnimator.SetFloat("AttackSpeed", 1);
 
             }
 

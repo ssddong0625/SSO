@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 675028050520470383}
   - component: {fileID: 4695375298274293775}
   - component: {fileID: 2061839042820648536}
+  - component: {fileID: 6841389399611783976}
   m_Layer: 11
   m_Name: Image
   m_TagString: Untagged
@@ -110,6 +111,19 @@ MonoBehaviour:
   m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6841389399611783976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 875422385706481192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe332cab7d31fdd43a71970514c32420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 0}
 --- !u!1 &1456094995118679039
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,6 +361,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5307920632570799653}
+  - component: {fileID: 8898006665032105056}
+  - component: {fileID: 3271247612499857837}
   m_Layer: 11
   m_Name: cactus_root
   m_TagString: Untagged
@@ -370,6 +386,43 @@ Transform:
   - {fileID: 8017400157009653109}
   m_Father: {fileID: 9193964291900394953}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8898006665032105056
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2461262015336632660}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.5, y: 1, z: 1}
+  m_Center: {x: -0.5, y: 0, z: 0}
+--- !u!114 &3271247612499857837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2461262015336632660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54d2920dd909e1c4e97dc67498e11abb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  monster: {fileID: 8638109818669001369}
+  hitLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
 --- !u!1 &2563047066448291136
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,7 +464,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1320330618177313067}
-  - component: {fileID: 3306452268272534694}
   m_Layer: 11
   m_Name: cactus_rightHand
   m_TagString: Untagged
@@ -435,27 +487,6 @@ Transform:
   - {fileID: 9220004651237469261}
   m_Father: {fileID: 5716163876531490613}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &3306452268272534694
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3176567040973953227}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.3, y: 0.3, z: 0.3}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3289586823353612527
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,8 +687,9 @@ GameObject:
   - component: {fileID: 9193964291900394953}
   - component: {fileID: 6984238730935268223}
   - component: {fileID: 7246770848185228782}
-  - component: {fileID: 8564043146408878705}
   - component: {fileID: -8080811293933308231}
+  - component: {fileID: 2152640317086175610}
+  - component: {fileID: 8638109818669001369}
   m_Layer: 11
   m_Name: CactusPBR
   m_TagString: Untagged
@@ -726,34 +758,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &8564043146408878705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6168984871633139283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9622e49199e9124ca0f665137ff1d96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 79ceb22ae3a545842aaa5c2c852136f8, type: 2}
-  atk: 0
-  hp: 0
-  animator: {fileID: 6984238730935268223}
-  boxCol: {fileID: 6125063334333159891}
-  target: {fileID: 0}
-  attackRange: 3
-  attackCool: 2
-  detectiveRange: 10
-  exitRange: 10
-  spawnPos: {x: 0, y: 0, z: 0}
-  img: {fileID: 2061839042820648536}
-  text: {fileID: 0}
-  hitLayerMask:
-    serializedVersion: 2
-    m_Bits: 1024
 --- !u!114 &-8080811293933308231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -768,7 +772,73 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testPattern: {fileID: 0}
   key: {fileID: 11400000, guid: b2f8bb92e4ba9434ca8062047d86dd4b, type: 2}
-  monster: {fileID: 8564043146408878705}
+  monster: {fileID: 8638109818669001369}
+--- !u!54 &2152640317086175610
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6168984871633139283}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!114 &8638109818669001369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6168984871633139283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad4b7f271351a54499063e8cc3e0ba4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: 79ceb22ae3a545842aaa5c2c852136f8, type: 2}
+  atk: 0
+  hp: 0
+  animator: {fileID: 6984238730935268223}
+  boxCol: {fileID: 8898006665032105056}
+  target: {fileID: 0}
+  attackRange: 6
+  attackCool: 0
+  detectiveRange: 15
+  exitRange: 15
+  nextAttack: -999
+  spawnPos: {x: 0, y: 0, z: 0}
+  lastAttacker: {fileID: 0}
+  img: {fileID: 2061839042820648536}
+  text: {fileID: 0}
+  hitLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  enableHalfPattern: 1
+  halfThreshold: 0.5
+  onHalfHpPattern:
+    m_PersistentCalls:
+      m_Calls: []
+  enrageThreshold: 0
+  bossAtk: 2
+  bossSpeed: 1.3
+  bossCool: 0.7
 --- !u!1 &6757548615266068725
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,8 +976,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5125203970354303268}
   - component: {fileID: 573945465136614905}
-  - component: {fileID: 6125063334333159891}
-  - component: {fileID: 3672700657141046186}
   m_Layer: 11
   m_Name: Cactus
   m_TagString: Untagged
@@ -1001,40 +1069,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.5323887, y: 0.023120299, z: -0.0010211468}
     m_Extent: {x: 0.6477649, y: 0.4573908, z: 1.0422637}
   m_DirtyAABB: 0
---- !u!65 &6125063334333159891
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7472839748185059037}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.7, y: 1, z: 1.2}
-  m_Center: {x: 0, y: 0, z: 0.6}
---- !u!114 &3672700657141046186
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7472839748185059037}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54d2920dd909e1c4e97dc67498e11abb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  monster: {fileID: 8564043146408878705}
 --- !u!1 &8464810011697029098
 GameObject:
   m_ObjectHideFlags: 0

@@ -94,12 +94,12 @@ public class PoolManager : MonoBehaviour
     {
         if (obj == null) return;
         IPoolable able = obj.GetComponent<IPoolable>();
+        obj.SetActive(true);
         if (able != null)
         {
             able.OnSpawned();
         }
 
-        obj.SetActive(true);
     }
 
     public void ReturnPool(GameObject obj)

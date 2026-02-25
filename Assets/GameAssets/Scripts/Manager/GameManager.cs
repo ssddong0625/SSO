@@ -17,6 +17,8 @@ namespace GameAssets.Scripts.Manager
         [SerializeField]
         private UiManager uiManager;
         [SerializeField]
+        private UIToggle uitoggle;
+        [SerializeField]
         private SoundManager soundManager;
         [SerializeField]
         private CameraManager cameraManager;
@@ -24,20 +26,22 @@ namespace GameAssets.Scripts.Manager
         private Player player;
         [SerializeField]
         private PlayerEquip playerEquip;
-        private PlayerSkill skill = new PlayerSkill();
+        [SerializeField]
+        private Bow bow;
         private PlayerStatus playerStatus = new PlayerStatus();
 
         public Player Player => player;
         public PlayerEquip PlayerEquip => playerEquip;
         public PlayerStatus PlayerStauts => playerStatus;
         
-        public PlayerSkill Skill => skill;
+        public Bow Bow => bow;
         public UiManager UiManager => uiManager;
         public CameraManager CameraManager => cameraManager;
         public SoundManager SoundManager => soundManager;
+        public UIToggle UIToggle => uitoggle;
 
 
-    
+
         private void Awake()
         {
             if (instance == null)
@@ -75,7 +79,7 @@ namespace GameAssets.Scripts.Manager
         }
         private void EndScene()
         {
-            LoadScene(2);
+            LoadScene(1);
             playerStatus.Reset();
         
         }

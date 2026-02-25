@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d0ad0cdb769df4c9d75638b886b103, type: 3}
   m_Name: Bow
   m_EditorClassIdentifier: 
-  atk: 50
+  atk: 100
   weaponSpeed: 0
   attackCoolDown: 1
   type: 2

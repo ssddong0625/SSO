@@ -21,4 +21,7 @@ public class ItemData : ScriptableObject
     public int maxStack = 1;
     [Header("무기일때만")]
     public WeaponData data;
+    [Header("포션일때만")]
+    public float healAmount;
+
 }

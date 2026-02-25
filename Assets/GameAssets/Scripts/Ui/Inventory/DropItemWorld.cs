@@ -8,6 +8,16 @@ public class DropItemWorld : MonoBehaviour
     [SerializeField] private int amount = 1;
     [SerializeField] LayerMask layerMask;
 
+    public void Awake()
+    {
+        StartCoroutine(DestroyObjectCO());
+    }
+
+    IEnumerator DestroyObjectCO()
+    {
+        yield return new WaitForSeconds(15f);
+        Destroy(gameObject);
+    }
     private void OnTriggerEnter(Collider other)
     {
         if(((1<<other.gameObject.layer)& layerMask.value) == 0)

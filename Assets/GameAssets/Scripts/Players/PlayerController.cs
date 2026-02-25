@@ -4,6 +4,7 @@ using UnityEngine;
 using GameAssets.Scripts.Weapons;
 using System;
 using GameAssets.Scripts.Data;
+using GameAssets.Scripts.Manager;
 
 
 
@@ -47,7 +48,10 @@ namespace GameAssets.Scripts.Players
         [SerializeField]
         float runSpeed;
 
-
+        public void MouseSlider(float value)
+        {
+            mouseSpeed = value;
+        }
         public float Gauge
         {
             get { return gauge; }
@@ -68,13 +72,7 @@ namespace GameAssets.Scripts.Players
         //잠깐 만들어놓음 나중에 지울것.
         public void UnLockCursor()
         {
-            
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-
+           
             if (Input.GetKeyDown(KeyCode.F12))
             {
                 Cursor.lockState = CursorLockMode.Locked;
@@ -83,7 +81,6 @@ namespace GameAssets.Scripts.Players
         }
         public void Move()
         {
-            if (Cursor.visible) { return; }
             float x = Input.GetAxisRaw("Horizontal");
             float z = Input.GetAxisRaw("Vertical");
             moveInput = new Vector3(x, 0f, z);
@@ -202,8 +199,10 @@ namespace GameAssets.Scripts.Players
         }
         void Update()
         {
-           // Attacking();
-           // Rolling();
+            // Attacking();
+            // Rolling();
+
+            if (GameManager.instance.UIToggle.IsUiOpen) { return; }
             Moving();
             Move();
             UnLockCursor();

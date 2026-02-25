@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e10dd5306cc2ffe4099971b9ba5cefbe, type: 3}
   m_Name: BowArrow
   m_EditorClassIdentifier: 
-  prefab: {fileID: 299104432121230754, guid: 96711372ac71aa94d8ef04b40e9445f9, type: 3}
+  prefab: {fileID: 3928998189374746443, guid: 00bba72dbda252a4eac12e218848cb44, type: 3}
   prewarmCount: 30

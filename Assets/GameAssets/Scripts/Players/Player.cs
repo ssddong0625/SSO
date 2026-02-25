@@ -1,11 +1,7 @@
 using GameAssets.Scripts.Data;
 using GameAssets.Scripts.Manager;
 using GameAssets.Scripts.Weapons;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -50,7 +46,8 @@ namespace GameAssets.Scripts.Players
 
         public void Update()
         {
-            GameManager.instance.Skill.Skill();
+          // GameManager.instance.Skill.Skill();
+            
         }
         public void Start()
         {

@@ -19,36 +19,34 @@ namespace GameAssets.Scripts.Monsters
     {
         public MonsterData data;
         [SerializeField]
-       int atk;
+     protected  int atk;
         [SerializeField]
-       float hp;
-        float speed;
-       int exp;
-        float maxHp;
+      protected float hp;
+      protected  float speed;
+      protected int exp;
+      protected  float maxHp;
         public event Action ondie;
-        public event Action bossPattern;
         public Animator animator;
         [SerializeField]
-        BoxCollider boxCol;
-        NavMeshAgent agent;
+       protected BoxCollider boxCol;
+       protected NavMeshAgent agent;
         public Transform target;
         public int attackRange;
         public float attackCool;
         public float detectiveRange;
         public float exitRange;
         [SerializeField]
-        float nextAttack = -999f;
-        HashSet<IHitAble> hits;
-        
+        protected float nextAttack = -999f;
+        protected HashSet<IHitAble> hits;
         public Vector3 spawnPos;
 
         public Transform lastAttacker;
         public Image img;
 
-        bool oneTime;
+      //  bool oneTime;
         public  TMP_Text text;
         [SerializeField]
-        LayerMask hitLayerMask;
+       protected LayerMask hitLayerMask;
         public int Atk
         {
             get { return atk; }
@@ -67,11 +65,11 @@ namespace GameAssets.Scripts.Monsters
                 animator.SetTrigger("TakeDamage");
                 
                 
-                if (!oneTime&&hp/maxHp<=0.5f)
-                {
-                    oneTime= true; 
-                    bossPattern?.Invoke();
-                }
+             //   if (!oneTime&&hp/maxHp<=0.5f)
+             //   {
+             //       oneTime= true; 
+             //      // bossPattern?.Invoke();
+             //   }
 
                 if (hp <= 0)
                 {
@@ -94,6 +92,7 @@ namespace GameAssets.Scripts.Monsters
             speed = 0f;
             TryGetComponent(out agent);
             hits=new HashSet<IHitAble>();
+
             img.gameObject.SetActive(true);
         }
         public void Start()
@@ -155,14 +154,14 @@ namespace GameAssets.Scripts.Monsters
             }
       
         }
-        private void OnDrawGizmosSelected()
+        protected void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, attackRange);
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, detectiveRange);
         }
-        void ChaseTarget()
+        protected void ChaseTarget()
         {
             speed = 1f;
             agent.isStopped = false;
@@ -185,7 +184,7 @@ namespace GameAssets.Scripts.Monsters
         {
             this.target = target;
         }
-        IEnumerator DieCo()
+        protected IEnumerator DieCo()
         {
             target = null;
             animator.SetTrigger("Die");
@@ -203,12 +202,19 @@ namespace GameAssets.Scripts.Monsters
             speed = 1f;
         }
 
-        public void AddExp()
+        public void HitPlayer(Collider other)
         {
+            if (((1 << other.gameObject.layer) & hitLayerMask.value) == 0) { return; }
+            IHitAble hit = other.GetComponent<IHitAble>();
+            if (!hits.Add(hit))
+            {
+                return;
+            }
+            hit?.Hit(atk);
         }
-        
 
-        private void OnTriggerEnter(Collider other)
+
+        protected void OnTriggerEnter(Collider other)
         {
             if (((1 << other.gameObject.layer) & hitLayerMask.value) == 0) { return; }
             IHitAble hit = other.GetComponent<IHitAble>();
@@ -219,6 +225,7 @@ namespace GameAssets.Scripts.Monsters
             hit?.Hit(atk) ;
             
         }
+        
 
         public void Attack()
         {
@@ -244,9 +251,9 @@ namespace GameAssets.Scripts.Monsters
            // speed = 0f;
            // StartCoroutine(AttackTriggerCo());
         }
-        IEnumerator AttackTriggerCo()
+        protected IEnumerator AttackTriggerCo()
         {
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.5f);
             boxCol.isTrigger = false;
             
         }
@@ -263,14 +270,15 @@ namespace GameAssets.Scripts.Monsters
 
         public void OnDeSpawned()
         {
-            hp = data.hp;
-            maxHp = data.maxHp;
-            exp = data.exp;
-            atk = data.atk;
+            //hp = data.hp;
+            //maxHp = data.maxHp;
+            //exp = data.exp;
+            //atk = data.atk;
+            //attackCool = data.attackCool;
             lastAttacker = null;
           
         }
-        public void TakeDamage(int atk)
+        public virtual void TakeDamage(int atk)
         {
             Hp -= atk;
             GameManager.instance.UiManager.MonsterHpView(this);

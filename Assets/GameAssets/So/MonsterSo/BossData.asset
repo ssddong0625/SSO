@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06366330a27c5e44e907439364a6307a, type: 3}
   m_Name: BossData
   m_EditorClassIdentifier: 
-  atk: 100
+  atk: 20
   exp: 500
   hp: 3000
   maxHp: 3000
-  dropItem: {fileID: 0}
+  attackCool: 2
+  dropItem:
+  - {fileID: 0}

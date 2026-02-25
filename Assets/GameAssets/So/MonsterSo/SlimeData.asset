@@ -19,5 +19,5 @@ MonoBehaviour:
   attackCool: 3
   dropItem:
   - {fileID: 5457538881884559407, guid: 6520900bf8a211f4f94f1aff182597f7, type: 3}
-  - {fileID: 90294231491560378, guid: 4f8a411cb355802479bfaacdf0f8a49f, type: 3}
+  - {fileID: 3635432415277123925, guid: 310468503d5e0264f8fb23b35ce39c18, type: 3}
   - {fileID: 1063260310433950461, guid: edf9c8c5ca45e514bb9bad9a357b7f5e, type: 3}

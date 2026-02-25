@@ -19,15 +19,5 @@ public class CameraAlways : MonoBehaviour
         if (cam == null) { return; }
         transform.forward = cam.transform.forward;
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+ 
 }

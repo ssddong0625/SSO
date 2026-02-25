@@ -10,7 +10,7 @@ public class BossPattern : MonoBehaviour//,IHitAble
     // public int hp;
     public PoolKey key;
     [SerializeField]
-    Monster monster;
+    BossMonster monster;
 
 
     /*
@@ -31,7 +31,7 @@ public class BossPattern : MonoBehaviour//,IHitAble
     {
         if (monster == null)
         {
-            monster=GetComponent<Monster>();
+            monster=GetComponent<BossMonster>();
         }
     }
     public void Start()
@@ -48,7 +48,7 @@ public class BossPattern : MonoBehaviour//,IHitAble
     }
     public void OnEnable()
     {
-        if(monster == null) { Debug.Log("안 붙어있어 짜샤 "); monster = GetComponent<Monster>(); }
+        if(monster == null) { Debug.Log("안 붙어있어 짜샤 "); monster = GetComponent<BossMonster>(); }
         
     }
     public void OnDisable()
